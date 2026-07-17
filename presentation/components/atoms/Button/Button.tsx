@@ -49,7 +49,7 @@ const ButtonRoot = forwardRef<ComponentRef<typeof Pressable>, ButtonProps>(
         >
           {loading ? (
             <ActivityIndicator
-              color={variant === 'filled' ? '#FFFFFF' : '#DC2626'}
+              color={variant === 'filled' ? '#FFFFFF' : '#000000'}
             />
           ) : (
             children
@@ -67,7 +67,7 @@ const Label = forwardRef<ComponentRef<typeof Text>, ButtonLabelProps>(
     return (
       <Text
         ref={ref}
-        color={color ?? (context.variant === 'filled' ? '#FFFFFF' : '#DC2626')}
+        color={color ?? (context.variant === 'filled' ? '#FFFFFF' : '#000000')}
         style={[styles.label, style]}
         variant="label"
         {...props}
