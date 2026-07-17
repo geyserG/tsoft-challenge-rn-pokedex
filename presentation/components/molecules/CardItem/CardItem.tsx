@@ -78,22 +78,8 @@ const CardImage = forwardRef<
   useCardItemContext('CardItem.Image');
 
   return (
-    <View
-      style={{
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
-    >
-      <View
-        style={{
-          width: '90%',
-          height: '90%',
-          backgroundColor: 'white',
-          opacity: 0.5,
-          borderRadius: 31,
-          position: 'absolute',
-        }}
-      />
+    <View style={styles.imageContainer}>
+      <View style={styles.imageLayer} />
       <NativeImage
         ref={ref}
         resizeMode={resizeMode}

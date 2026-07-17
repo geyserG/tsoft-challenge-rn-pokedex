@@ -29,6 +29,18 @@ export const styles = StyleSheet.create({
     flex: 1,
     marginRight: 16,
   },
+  imageContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  imageLayer: {
+    width: '90%',
+    height: '90%',
+    backgroundColor: 'white',
+    opacity: 0.5,
+    borderRadius: 31,
+    position: 'absolute',
+  },
   image: {
     height: 70,
     width: 70,
