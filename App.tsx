@@ -1,12 +1,6 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
 import { StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import Navigation from './src/presentation/navigation/Navigator';
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
@@ -20,7 +14,11 @@ function App() {
 }
 
 function AppContent() {
-  return <View style={styles.container}>{/** */}</View>;
+  return (
+    <View style={styles.container}>
+      <Navigation />
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
