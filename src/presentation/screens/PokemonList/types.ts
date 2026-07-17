@@ -1,5 +1,6 @@
 export interface PokemonListItem {
-  id: number;
-  image: string;
-  name: string;
+  pokemonId: number;
+  pokemonName: string;
+  imageLarge: string;
+  imageSmall: string;
 }

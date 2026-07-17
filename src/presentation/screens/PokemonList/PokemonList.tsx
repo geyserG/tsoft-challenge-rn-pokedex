@@ -5,31 +5,36 @@ import { INITIAL_ITEMS_TO_RENDER } from './constants';
 import type { PokemonListItem } from './types';
 import ListHeader from './ListHeader/ListHeader';
 import { styles } from './PokemonList.styles';
-
-const pokemonItems: PokemonListItem[] = Array.from(
-  { length: 200 },
-  (_, index) => ({
-    id: index + 1,
-    image:
-      'https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/004.png',
-    name: 'Charmander',
-  }),
-);
+import { usePokemonList } from '../../hooks/usePokemonList';
+import { useEffect, useState } from 'react';
+import { SkeletonContent } from './PokemonList.Skeleton';
 
 const PokemonList = () => {
+  const { page, loading, reload } = usePokemonList();
   const navigation = useNavigation();
+  const [pokemonList, setPokemonList] = useState<PokemonListItem[] | null>(
+    null,
+  );
+
+  useEffect(() => {
+    if (page) setPokemonList(page.results);
+  }, [page]);
 
   const renderItems: ListRenderItem<PokemonListItem> = ({ item }) => (
     <View style={styles.item}>
       <CardItem
         onPress={() =>
           navigation.navigate('Details', {
-            pokemonId: item.id,
+            pokemonId: item.pokemonId,
           })
         }
       >
-        <CardItem.Label>{item.name}</CardItem.Label>
-        <CardItem.Image source={{ uri: item.image }} />
+        <CardItem.Label>{item.pokemonName}</CardItem.Label>
+        <CardItem.Image
+          source={{
+            uri: 'https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/004.png',
+          }}
+        />
       </CardItem>
     </View>
   );
@@ -38,11 +43,14 @@ const PokemonList = () => {
     <View style={styles.container}>
       <FlatList
         contentContainerStyle={styles.content}
-        data={pokemonItems}
+        data={pokemonList}
         initialNumToRender={INITIAL_ITEMS_TO_RENDER}
-        keyExtractor={item => item.id.toString()}
+        keyExtractor={item => item.pokemonName}
+        ListEmptyComponent={<SkeletonContent />}
         ListHeaderComponent={<ListHeader />}
         maxToRenderPerBatch={INITIAL_ITEMS_TO_RENDER}
+        onRefresh={reload}
+        refreshing={loading}
         renderItem={renderItems}
         updateCellsBatchingPeriod={50}
         windowSize={5}

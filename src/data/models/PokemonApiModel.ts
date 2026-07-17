@@ -13,7 +13,14 @@ export interface PokemonApiModel {
   held_items: any[];
   moves: any[];
   species: any[];
-  sprites: any[];
+  sprites: {
+    front_default: string;
+    other: {
+      'official-artwork': {
+        front_default: string;
+      };
+    };
+  };
   cries: any[];
   stats: any[];
   types: any[];

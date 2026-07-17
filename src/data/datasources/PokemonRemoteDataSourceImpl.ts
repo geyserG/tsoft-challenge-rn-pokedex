@@ -6,6 +6,6 @@ export class PokemonRemoteDataSourceImpl implements PokemonRemoteDataSource {
   constructor(private readonly httpClient: HttpClient) {}
 
   async getPokemonList(): Promise<PageApiModel> {
-    return this.httpClient.get<PageApiModel>('/ability');
+    return this.httpClient.get<PageApiModel>('/pokemon');
   }
 }

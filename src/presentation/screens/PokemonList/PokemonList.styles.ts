@@ -13,4 +13,5 @@ export const styles = StyleSheet.create({
   title: {
     marginBottom: 16,
   },
+  skeletonItemContent: { marginBottom: 10 },
 });

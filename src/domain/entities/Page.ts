@@ -1,8 +1,8 @@
-import type { Pokemon } from './Pokemon';
+import { ResultItem } from './ResultItem';
 
 export interface Page {
-  count: number;
-  next: string | null;
-  previous: string | null;
-  results: Pokemon[];
+  total: number;
+  nextPage: string | null;
+  previousPage: string | null;
+  results: ResultItem[];
 }
