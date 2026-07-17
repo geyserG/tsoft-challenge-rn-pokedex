@@ -1,9 +1,9 @@
-import { forwardRef, type ElementRef } from 'react';
+import { forwardRef, type ComponentRef } from 'react';
 import { Text as NativeText } from 'react-native';
 import { styles, variantStyles } from './Text.styles';
 import type { TextEmphasisProps, TextProps } from './Text.types';
 
-const TextRoot = forwardRef<ElementRef<typeof NativeText>, TextProps>(
+const TextRoot = forwardRef<ComponentRef<typeof NativeText>, TextProps>(
   ({ color, style, variant = 'body', weight, ...props }, ref) => (
     <NativeText
       ref={ref}
@@ -19,7 +19,7 @@ const TextRoot = forwardRef<ElementRef<typeof NativeText>, TextProps>(
   ),
 );
 
-const Emphasis = forwardRef<ElementRef<typeof NativeText>, TextEmphasisProps>(
+const Emphasis = forwardRef<ComponentRef<typeof NativeText>, TextEmphasisProps>(
   ({ weight = '700', ...props }, ref) => (
     <TextRoot ref={ref} weight={weight} {...props} />
   ),

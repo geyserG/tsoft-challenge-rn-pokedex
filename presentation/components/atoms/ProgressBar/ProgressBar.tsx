@@ -1,4 +1,9 @@
-import { createContext, forwardRef, useContext, type ElementRef } from 'react';
+import {
+  createContext,
+  forwardRef,
+  useContext,
+  type ComponentRef,
+} from 'react';
 import { View } from 'react-native';
 import { styles } from './ProgressBar.styles';
 import type {
@@ -10,7 +15,7 @@ import type {
 
 const ProgressBarContext = createContext<ProgressBarContextValue | null>(null);
 
-const ProgressBarRoot = forwardRef<ElementRef<typeof View>, ProgressBarProps>(
+const ProgressBarRoot = forwardRef<ComponentRef<typeof View>, ProgressBarProps>(
   ({ accessibilityLabel, children, max = 100, value, ...props }, ref) => {
     const safeMax = max > 0 ? max : 100;
     const safeValue = clamp(value, 0, safeMax);
@@ -32,7 +37,7 @@ const ProgressBarRoot = forwardRef<ElementRef<typeof View>, ProgressBarProps>(
   },
 );
 
-const Track = forwardRef<ElementRef<typeof View>, ProgressBarTrackProps>(
+const Track = forwardRef<ComponentRef<typeof View>, ProgressBarTrackProps>(
   ({ children, style, ...props }, ref) => {
     useProgressBarContext('ProgressBar.Track');
 
@@ -45,7 +50,7 @@ const Track = forwardRef<ElementRef<typeof View>, ProgressBarTrackProps>(
 );
 
 const Indicator = forwardRef<
-  ElementRef<typeof View>,
+  ComponentRef<typeof View>,
   ProgressBarIndicatorProps
 >(({ style, ...props }, ref) => {
   const { percentage } = useProgressBarContext('ProgressBar.Indicator');

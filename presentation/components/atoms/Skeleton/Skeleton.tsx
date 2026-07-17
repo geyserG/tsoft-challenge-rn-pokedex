@@ -1,9 +1,9 @@
-import { forwardRef, useEffect, useRef, type ElementRef } from 'react';
+import { forwardRef, useEffect, useRef, type ComponentRef } from 'react';
 import { Animated, Easing, View } from 'react-native';
 import { styles } from './Skeleton.styles';
 import type { SkeletonItemProps, SkeletonProps } from './Skeleton.types';
 
-const SkeletonRoot = forwardRef<ElementRef<typeof View>, SkeletonProps>(
+const SkeletonRoot = forwardRef<ComponentRef<typeof View>, SkeletonProps>(
   ({ accessibilityLabel = 'Loading', ...props }, ref) => (
     <View
       ref={ref}
@@ -14,7 +14,7 @@ const SkeletonRoot = forwardRef<ElementRef<typeof View>, SkeletonProps>(
   ),
 );
 
-const Item = forwardRef<ElementRef<typeof View>, SkeletonItemProps>(
+const Item = forwardRef<ComponentRef<typeof View>, SkeletonItemProps>(
   (
     {
       animated = true,

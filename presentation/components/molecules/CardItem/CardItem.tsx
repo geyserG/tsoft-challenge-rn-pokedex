@@ -1,4 +1,9 @@
-import { createContext, forwardRef, useContext, type ElementRef } from 'react';
+import {
+  createContext,
+  forwardRef,
+  useContext,
+  type ComponentRef,
+} from 'react';
 import { Image as NativeImage, Pressable, View } from 'react-native';
 import { Text } from '../../atoms/Text';
 import { styles } from './CardItem.styles';
@@ -11,7 +16,7 @@ import type {
 
 const CardItemContext = createContext<CardItemContextValue | null>(null);
 
-const CardItemRoot = forwardRef<ElementRef<typeof View>, CardItemProps>(
+const CardItemRoot = forwardRef<ComponentRef<typeof View>, CardItemProps>(
   (
     {
       backgroundColor = '#FFFFFF',
@@ -55,7 +60,7 @@ const CardItemRoot = forwardRef<ElementRef<typeof View>, CardItemProps>(
   },
 );
 
-const Label = forwardRef<ElementRef<typeof Text>, CardItemLabelProps>(
+const Label = forwardRef<ComponentRef<typeof Text>, CardItemLabelProps>(
   ({ style, ...props }, ref) => {
     useCardItemContext('CardItem.Label');
 
@@ -72,7 +77,7 @@ const Label = forwardRef<ElementRef<typeof Text>, CardItemLabelProps>(
 );
 
 const CardImage = forwardRef<
-  ElementRef<typeof NativeImage>,
+  ComponentRef<typeof NativeImage>,
   CardItemImageProps
 >(({ resizeMode = 'contain', style, ...props }, ref) => {
   useCardItemContext('CardItem.Image');

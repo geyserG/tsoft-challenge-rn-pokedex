@@ -1,4 +1,9 @@
-import { createContext, forwardRef, useContext, type ElementRef } from 'react';
+import {
+  createContext,
+  forwardRef,
+  useContext,
+  type ComponentRef,
+} from 'react';
 import { ActivityIndicator, Pressable, View } from 'react-native';
 import { Text } from '../Text';
 import { rootVariants, styles } from './Button.styles';
@@ -11,7 +16,7 @@ import type {
 
 const ButtonContext = createContext<ButtonContextValue | null>(null);
 
-const ButtonRoot = forwardRef<ElementRef<typeof Pressable>, ButtonProps>(
+const ButtonRoot = forwardRef<ComponentRef<typeof Pressable>, ButtonProps>(
   (
     {
       accessibilityRole = 'button',
@@ -55,7 +60,7 @@ const ButtonRoot = forwardRef<ElementRef<typeof Pressable>, ButtonProps>(
   },
 );
 
-const Label = forwardRef<ElementRef<typeof Text>, ButtonLabelProps>(
+const Label = forwardRef<ComponentRef<typeof Text>, ButtonLabelProps>(
   ({ color, style, ...props }, ref) => {
     const context = useButtonContext('Button.Label');
 
@@ -71,7 +76,7 @@ const Label = forwardRef<ElementRef<typeof Text>, ButtonLabelProps>(
   },
 );
 
-const Icon = forwardRef<ElementRef<typeof View>, ButtonIconProps>(
+const Icon = forwardRef<ComponentRef<typeof View>, ButtonIconProps>(
   ({ position = 'left', style, ...props }, ref) => {
     useButtonContext('Button.Icon');
 
