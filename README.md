@@ -173,3 +173,71 @@ export async function getFavorites(): Promise<number[]> {
   return value ? JSON.parse(value) : [];
 }
 ```
+
+## Rendering optimization and state management
+
+This project uses [React Compiler](https://react.dev/learn/react-compiler) as its default render memoization strategy.
+
+### Why React Compiler
+
+React Compiler analyzes components and hooks during the Babel build and automatically memoizes values, functions, and JSX when doing so is safe. React 19 provides the runtime APIs required by the generated code, while `babel-plugin-react-compiler` performs the build-time transformation.
+
+This keeps optimization close to React's understanding of component dependencies and reduces the amount of performance-specific code mixed with presentation logic. For example, the compiler can keep a `FlatList` render function stable until one of its captured dependencies changes.
+
+### Installation
+
+Install the compiler as a development dependency:
+
+```sh
+yarn add --dev babel-plugin-react-compiler
+```
+
+The compiler must run first in the Babel plugin pipeline. This project enables it in `babel.config.js`:
+
+```js
+module.exports = {
+  plugins: ['babel-plugin-react-compiler'],
+  presets: ['module:@react-native/babel-preset'],
+};
+```
+
+React 19 is the compiler's default target, so this project does not require `react-compiler-runtime` or a custom `target` setting.
+
+### Why not manual memoization by default
+
+The project does not add `React.memo`, `useMemo`, or `useCallback` preemptively. Manual memoization introduces dependency arrays, additional code paths, and maintenance overhead. An incorrect dependency list can retain stale values, while unnecessary memoization can make components harder to understand without producing a measurable improvement.
+
+Components should instead remain pure and follow the [Rules of React](https://react.dev/reference/rules). React Compiler can then derive dependencies and apply memoization automatically.
+
+Manual memoization remains an escape hatch when profiling demonstrates a problem the compiler cannot address, or when stable identity is part of a behavioral contract such as an effect dependency. Such cases should be measured and documented rather than applied by convention.
+
+### Why not Redux or Zustand
+
+React Compiler is a rendering optimization tool; it is not a replacement for application state management. Redux and Zustand solve a different problem by providing shared client-side state stores.
+
+The current application does not have enough complex global state to justify either dependency. Its state can be separated by responsibility:
+
+- Screen-specific UI state remains local to the screen or a presentation hook.
+- Navigation state is managed by React Navigation.
+- Business operations are exposed through application use cases.
+- Remote and persisted data are accessed through repository abstractions.
+- Small, non-sensitive persisted values are stored with AsyncStorage.
+
+Adding a global store now would create another source of truth and couple screens to a state-management library without solving a current requirement. Redux or Zustand should be reconsidered only when multiple distant screens need to coordinate complex client-owned state, updates become difficult to express through the existing boundaries, and profiling or maintenance evidence supports the additional abstraction.
+
+Server data should not be copied into a global client store solely to make it accessible. If API caching, request deduplication, invalidation, and background synchronization become substantial requirements, a dedicated server-state solution should be evaluated separately.
+
+### Verification
+
+To confirm that React Compiler is active, inspect Babel's generated output. Compiled components import `react/compiler-runtime` and allocate a memoization cache:
+
+```js
+import { c as _c } from 'react/compiler-runtime';
+
+function Component() {
+  const $ = _c(2);
+  // Compiled component output...
+}
+```
+
+The generated output is an implementation detail and should not be committed. Application code should remain declarative and free of compiler-generated cache operations.
