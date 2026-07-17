@@ -4,6 +4,7 @@ coverage/
 build/
 android/.gradle/
 android/app/build/
+android/app/.cxx/
 ios/Pods/
 ios/build/
 ios/**/Images.xcassets/
