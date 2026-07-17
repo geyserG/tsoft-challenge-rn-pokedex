@@ -32,8 +32,9 @@ const PokemonList = () => {
         <CardItem.Label>{item.pokemonName}</CardItem.Label>
         <CardItem.Image
           source={{
-            uri: 'https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/004.png',
+            uri: item.imageLarge,
           }}
+          style={{ width: 70, height: 70 }}
         />
       </CardItem>
     </View>

@@ -1,5 +1,5 @@
 import type { ResultItem } from '../../domain/entities/ResultItem';
-import { ResultItemApiModel } from '../models/ResultItemApiModel';
+import type { ResultItemApiModel } from '../models/ResultItemApiModel';
 
 export class ResultMapper {
   static parseToDomain(model: ResultItemApiModel): ResultItem {

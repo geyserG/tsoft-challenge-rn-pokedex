@@ -1,16 +1,14 @@
 import { useCallback, useEffect, useState } from 'react';
 import { dependencies } from '../../app/container/dependencies';
-import type { Page } from '../../domain/entities/Page';
-
-interface UsePokemonListState {
-  page: Page | null;
-  loading: boolean;
-  error: string | null;
-  reload: () => Promise<void>;
-}
+import type {
+  PokemonListItem,
+  PokemonListPage,
+  UsePokemonListState,
+} from './usePokemonList.types';
+import { POKEMON_IMAGE_BASE_URL } from './constants';
 
 const usePokemonList = (): UsePokemonListState => {
-  const [page, setPage] = useState<Page>({
+  const [page, setPage] = useState<PokemonListPage>({
     total: 0,
     nextPage: '',
     previousPage: '',
@@ -24,9 +22,10 @@ const usePokemonList = (): UsePokemonListState => {
       setLoading(true);
       setError(null);
 
-      const list = await dependencies.getPokemonList.execute();
+      const pageResult = await dependencies.getPokemonList.execute();
+      const results = pageResult.results.map(toPokemonListItem);
 
-      setPage(list);
+      setPage({ ...pageResult, results });
     } catch {
       setError('No fue posible cargar los pokémon');
     } finally {
@@ -45,5 +44,28 @@ const usePokemonList = (): UsePokemonListState => {
     reload: loadPage,
   };
 };
+
+function toPokemonListItem(result: {
+  pokemonName: string;
+  url: string;
+}): PokemonListItem {
+  const pokemonId = extractPokemonId(result.url);
+
+  return {
+    imageLarge: `${POKEMON_IMAGE_BASE_URL}/${pokemonId}.png`,
+    pokemonId,
+    pokemonName: result.pokemonName,
+  };
+}
+
+function extractPokemonId(url: string): number {
+  const match = url.match(/\/(\d+)\/?$/);
+
+  if (!match) {
+    throw new Error(`Unable to extract the Pokémon ID from URL: ${url}`);
+  }
+
+  return Number(match[1]);
+}
 
 export { usePokemonList };

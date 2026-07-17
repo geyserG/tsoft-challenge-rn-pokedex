@@ -7,7 +7,6 @@ export class PokemonMapper {
       pokemonId: model.id,
       pokemonName: model.name,
       imageLarge: model.sprites.other['official-artwork'].front_default,
-      imageSmall: model.sprites.front_default,
     };
   }
 }
