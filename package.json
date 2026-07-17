@@ -2,6 +2,7 @@
   "name": "Pokedex",
   "version": "0.0.1",
   "private": true,
+  "packageManager": "yarn@1.22.22",
   "scripts": {
     "android": "react-native run-android",
     "format": "prettier --write .",
@@ -12,7 +13,7 @@
     "start": "react-native start",
     "test": "jest",
     "typecheck": "tsc --noEmit",
-    "validate": "npm run format:check && npm run lint && npm run typecheck"
+    "validate": "prettier --check . && eslint . && tsc --noEmit"
   },
   "dependencies": {
     "@react-native/new-app-screen": "0.86.0",
