@@ -1,86 +1,103 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# Pokédex
 
-# Getting Started
+A React Native application built with TypeScript.
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+## Navigation
 
-## Step 1: Start Metro
+This project uses [React Navigation](https://reactnavigation.org/docs/getting-started/) with the [Native Stack Navigator](https://reactnavigation.org/docs/native-stack-navigator/).
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+### Why React Navigation
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+The Pokédex requires predictable transitions between screens such as the Pokémon list and Pokémon details. React Navigation centralizes this routing behavior instead of coupling navigation state to individual screens.
+
+Native Stack is used because it delegates transitions and gestures to `UINavigationController` on iOS and native fragments on Android. This provides platform-consistent behavior and better performance than a JavaScript-only stack.
+
+It also provides a scalable foundation for:
+
+- Type-safe route names and parameters with TypeScript.
+- Native headers, transitions, gestures, and back navigation.
+- Deep linking and nested navigators as the application grows.
+- A clear separation between screen composition and navigation state.
+
+### Installed packages
+
+| Package                          | Purpose                                                       |
+| -------------------------------- | ------------------------------------------------------------- |
+| `@react-navigation/native`       | Provides the navigation container and core routing behavior.  |
+| `@react-navigation/native-stack` | Provides a stack navigator backed by native platform APIs.    |
+| `react-native-screens`           | Exposes the native screen primitives used by Native Stack.    |
+| `react-native-safe-area-context` | Keeps navigation UI and screen content outside system insets. |
+
+### Installation
+
+Install the navigation core, Native Stack, and their native dependencies:
 
 ```sh
-yarn install --frozen-lockfile
-yarn start
+yarn add @react-navigation/native @react-navigation/native-stack
+yarn add react-native-screens react-native-safe-area-context
 ```
 
-## Step 2: Build and run your app
-
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
-
-### Android
+Install the iOS native dependencies after adding or updating these packages:
 
 ```sh
-yarn android
-```
-
-### iOS
-
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
-
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
-
-```sh
-bundle install
-```
-
-Then, and every time you update your native dependencies, run:
-
-```sh
+cd ios
 bundle exec pod install
+cd ..
 ```
 
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
+Rebuild the native application after installation:
 
 ```sh
 yarn ios
+# or
+yarn android
 ```
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+### Android configuration
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+`react-native-screens` requires its fragment factory to be configured before the activity restores its state. This project already includes the following setup in `android/app/src/main/java/com/pokedex/MainActivity.kt`:
 
-## Step 3: Modify your app
+```kt
+import android.os.Bundle
+import com.swmansion.rnscreens.fragment.restoration.RNScreensFragmentFactory
 
-Now that you have successfully run the app, let's make changes!
+override fun onCreate(savedInstanceState: Bundle?) {
+  supportFragmentManager.fragmentFactory = RNScreensFragmentFactory()
+  super.onCreate(savedInstanceState)
+}
+```
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
+React Navigation does not currently support Android's predictive back gesture. The project therefore sets the following property on the application in `android/app/src/main/AndroidManifest.xml`:
 
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
+```xml
+<application android:enableOnBackInvokedCallback="false">
+```
 
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
+### Minimal setup
 
-## Congratulations! :tada:
+Wrap the root navigator with `NavigationContainer` and define the available screens with a typed native stack:
 
-You've successfully run and modified your React Native App. :partying_face:
+```tsx
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-### Now what?
+type RootStackParamList = {
+  PokemonList: undefined;
+  PokemonDetails: { pokemonId: number };
+};
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
-# Troubleshooting
+export function AppNavigator() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="PokemonList">
+        <Stack.Screen name="PokemonList" component={PokemonListScreen} />
+        <Stack.Screen name="PokemonDetails" component={PokemonDetailsScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
+```
 
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+The route parameter list ensures that screen names and navigation parameters are checked at compile time. For example, navigating to `PokemonDetails` requires a numeric `pokemonId`.
