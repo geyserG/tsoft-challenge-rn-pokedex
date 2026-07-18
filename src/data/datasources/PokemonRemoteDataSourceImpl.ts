@@ -7,8 +7,10 @@ import type { PokemonRemoteDataSource } from './PokemonRemoteDataSource';
 export class PokemonRemoteDataSourceImpl implements PokemonRemoteDataSource {
   constructor(private readonly httpClient: HttpClient) {}
 
-  async getPokemonList(): Promise<PageApiModel> {
-    return this.httpClient.get<PageApiModel>('/pokemon');
+  async getPokemonList(offset: number, limit: number): Promise<PageApiModel> {
+    return this.httpClient.get<PageApiModel>(
+      `/pokemon?offset=${offset}&limit=${limit}`,
+    );
   }
 
   async getPokemonById(pokemonId: number): Promise<PokemonApiModel> {

@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import { FlatList, View, type ListRenderItem } from 'react-native';
-import { CardItem } from '../../components';
+import { CardItem, Skeleton } from '../../components';
 import { INITIAL_ITEMS_TO_RENDER } from './constants';
 import ListHeader from './ListHeader/ListHeader';
 import { styles } from './PokemonList.styles';
@@ -11,7 +11,7 @@ import { PokemonListItem } from './types';
 const EMPTY_POKEMON_LIST: PokemonListItem[] = [];
 
 const PokemonList = () => {
-  const { page, loading, reload } = usePokemonList();
+  const { page, loading, loadingMore, loadMore, reload } = usePokemonList();
   const navigation = useNavigation();
 
   const renderItems: ListRenderItem<PokemonListItem> = ({ item }) => (
@@ -41,9 +41,18 @@ const PokemonList = () => {
         initialNumToRender={INITIAL_ITEMS_TO_RENDER}
         keyExtractor={item => item.pokemonName}
         ListEmptyComponent={<SkeletonContent />}
+        ListFooterComponent={
+          loadingMore ? (
+            <Skeleton accessibilityLabel="Cargando más pokémon">
+              <Skeleton.Item height={100} borderRadius={15} />
+            </Skeleton>
+          ) : null
+        }
         ListHeaderComponent={<ListHeader />}
         maxToRenderPerBatch={INITIAL_ITEMS_TO_RENDER}
         onRefresh={reload}
+        onEndReached={loadMore}
+        onEndReachedThreshold={0.5}
         refreshing={loading}
         renderItem={renderItems}
         updateCellsBatchingPeriod={50}

@@ -8,8 +8,11 @@ import { PokemonMapper } from '../../data/mappers/PokemonMapper';
 export class PokemonRepositoryImpl implements PokemonRepository {
   constructor(private readonly remoteDataSource: PokemonRemoteDataSource) {}
 
-  async fetchPokemonList(): Promise<Page> {
-    const pageApiModel = await this.remoteDataSource.getPokemonList();
+  async fetchPokemonList(offset: number, limit: number): Promise<Page> {
+    const pageApiModel = await this.remoteDataSource.getPokemonList(
+      offset,
+      limit,
+    );
 
     return PageMapper.parseToDomain(pageApiModel);
   }
