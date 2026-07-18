@@ -36,8 +36,8 @@ export const styles = StyleSheet.create({
   imageLayer: {
     width: '90%',
     height: '90%',
-    backgroundColor: 'white',
-    opacity: 0.5,
+    backgroundColor: 'gray',
+    opacity: 0.2,
     borderRadius: 31,
     position: 'absolute',
   },
