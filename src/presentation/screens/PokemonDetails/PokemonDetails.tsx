@@ -1,11 +1,11 @@
 import { View, ScrollView, Image } from 'react-native';
 import React from 'react';
 import type { StaticScreenProps } from '@react-navigation/native';
-import type { PokemonDetailsParams } from '../navigation/types';
-import { usePokemonById } from '../hooks/usePokemonById';
-import { ProgressBar, Skeleton, Text } from '../components';
-import { pokemonStatLabels } from './constants';
-import { styles } from './PokemonDetails/styles';
+import type { PokemonDetailsParams } from '../../navigation/types';
+import { usePokemonById } from '../../hooks/usePokemonById';
+import { ProgressBar, Skeleton, Text } from '../../components';
+import { pokemonStatLabels } from '../constants';
+import { styles } from './styles';
 
 const MAX_BASE_STAT = 255;
 const STAT_SKELETON_ITEMS = 6;
