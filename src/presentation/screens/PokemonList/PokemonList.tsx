@@ -34,7 +34,6 @@ const PokemonList = () => {
           source={{
             uri: item.imageLarge,
           }}
-          style={{ width: 70, height: 70 }}
         />
       </CardItem>
     </View>

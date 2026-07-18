@@ -1,11 +1,10 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState, type Dispatch, type SetStateAction } from 'react';
 import { dependencies } from '../../app/container/dependencies';
 import type {
-  PokemonListItem,
   PokemonListPage,
   UsePokemonListState,
 } from './usePokemonList.types';
-import { POKEMON_IMAGE_BASE_URL } from './constants';
+import { toPokemonListItem } from './utils';
 
 const usePokemonList = (): UsePokemonListState => {
   const [page, setPage] = useState<PokemonListPage>({
@@ -17,25 +16,11 @@ const usePokemonList = (): UsePokemonListState => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const loadPage = useCallback(async () => {
-    try {
-      setLoading(true);
-      setError(null);
-
-      const pageResult = await dependencies.getPokemonList.execute();
-      const results = pageResult.results.map(toPokemonListItem);
-
-      setPage({ ...pageResult, results });
-    } catch {
-      setError('No fue posible cargar los pokémon');
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const loadPage = () => loadPokemonList(setPage, setLoading, setError);
 
   useEffect(() => {
     loadPage();
-  }, [loadPage]);
+  }, []);
 
   return {
     page,
@@ -45,27 +30,24 @@ const usePokemonList = (): UsePokemonListState => {
   };
 };
 
-function toPokemonListItem(result: {
-  pokemonName: string;
-  url: string;
-}): PokemonListItem {
-  const pokemonId = extractPokemonId(result.url);
+const loadPokemonList = async (
+  setPage: Dispatch<SetStateAction<PokemonListPage>>,
+  setLoading: Dispatch<SetStateAction<boolean>>,
+  setError: Dispatch<SetStateAction<string | null>>,
+): Promise<void> => {
+  try {
+    setLoading(true);
+    setError(null);
 
-  return {
-    imageLarge: `${POKEMON_IMAGE_BASE_URL}/${pokemonId}.png`,
-    pokemonId,
-    pokemonName: result.pokemonName,
-  };
-}
+    const pageResult = await dependencies.getPokemonList.execute();
+    const results = pageResult.results.map(toPokemonListItem);
 
-function extractPokemonId(url: string): number {
-  const match = url.match(/\/(\d+)\/?$/);
-
-  if (!match) {
-    throw new Error(`Unable to extract the Pokémon ID from URL: ${url}`);
+    setPage({ ...pageResult, results });
+  } catch {
+    setError('No fue posible cargar los pokémon');
+  } finally {
+    setLoading(false);
   }
-
-  return Number(match[1]);
-}
+};
 
 export { usePokemonList };
