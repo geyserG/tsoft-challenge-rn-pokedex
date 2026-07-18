@@ -2,6 +2,10 @@
 
 A React Native Pokédex built with TypeScript, React 19, and the native PokéAPI.
 
+## Demo
+
+[Watch the application demo](./demo.mov).
+
 ## Getting started
 
 Requirements:
