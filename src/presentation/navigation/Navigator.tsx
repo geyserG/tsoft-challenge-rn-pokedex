@@ -14,7 +14,16 @@ export const RootStack = createNativeStackNavigator({
         headerShown: false,
       },
     },
-    Details: PokemonDetails,
+    Details: {
+      screen: PokemonDetails,
+      options: {
+        headerShadowVisible: false,
+        headerStyle: {
+          backgroundColor: '#D2242A',
+        },
+        title: '',
+      },
+    },
     ListEmptyState: PokemonListEmptyState,
     DetailsEmptyState: PokemonDetailsEmptyState,
   },
