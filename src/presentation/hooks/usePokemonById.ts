@@ -5,7 +5,7 @@ import type { UsePokemonByIdState } from './usePokemonById.types';
 import { capitalizeFirstLetter } from './utils';
 import { pokemonTypes } from '../screens/constants';
 
-const usePokemonById = (pokemonId: string): UsePokemonByIdState => {
+const usePokemonById = (pokemonId: number): UsePokemonByIdState => {
   const [pokemon, setPokemon] = useState<Pokemon | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -26,7 +26,7 @@ const usePokemonById = (pokemonId: string): UsePokemonByIdState => {
 };
 
 const loadPokemonById = async (
-  pokemonId: string,
+  pokemonId: number,
   setPokemon: Dispatch<SetStateAction<Pokemon | null>>,
   setLoading: Dispatch<SetStateAction<boolean>>,
   setError: Dispatch<SetStateAction<string | null>>,

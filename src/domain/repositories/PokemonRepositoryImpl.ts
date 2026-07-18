@@ -14,7 +14,7 @@ export class PokemonRepositoryImpl implements PokemonRepository {
     return PageMapper.parseToDomain(pageApiModel);
   }
 
-  async fetchPokemonById(pokemonId: string): Promise<Pokemon> {
+  async fetchPokemonById(pokemonId: number): Promise<Pokemon> {
     const [pokemonApiModel, pokemonSpeciesApiModel] = await Promise.all([
       this.remoteDataSource.getPokemonById(pokemonId),
       this.remoteDataSource.getPokemonSpeciesById(pokemonId),

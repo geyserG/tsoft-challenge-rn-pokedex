@@ -2,23 +2,17 @@ import { useNavigation } from '@react-navigation/native';
 import { FlatList, View, type ListRenderItem } from 'react-native';
 import { CardItem } from '../../components';
 import { INITIAL_ITEMS_TO_RENDER } from './constants';
-import type { PokemonListItem } from './types';
 import ListHeader from './ListHeader/ListHeader';
 import { styles } from './PokemonList.styles';
 import { usePokemonList } from '../../hooks/usePokemonList';
-import { useEffect, useState } from 'react';
 import { SkeletonContent } from './PokemonList.Skeleton';
+import { PokemonListItem } from './types';
+
+const EMPTY_POKEMON_LIST: PokemonListItem[] = [];
 
 const PokemonList = () => {
   const { page, loading, reload } = usePokemonList();
   const navigation = useNavigation();
-  const [pokemonList, setPokemonList] = useState<PokemonListItem[] | null>(
-    null,
-  );
-
-  useEffect(() => {
-    if (page) setPokemonList(page.results);
-  }, [page]);
 
   const renderItems: ListRenderItem<PokemonListItem> = ({ item }) => (
     <View style={styles.item}>
@@ -43,7 +37,7 @@ const PokemonList = () => {
     <View style={styles.container}>
       <FlatList
         contentContainerStyle={styles.content}
-        data={pokemonList}
+        data={page?.results ?? EMPTY_POKEMON_LIST}
         initialNumToRender={INITIAL_ITEMS_TO_RENDER}
         keyExtractor={item => item.pokemonName}
         ListEmptyComponent={<SkeletonContent />}

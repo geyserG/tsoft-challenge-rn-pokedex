@@ -11,12 +11,12 @@ export class PokemonRemoteDataSourceImpl implements PokemonRemoteDataSource {
     return this.httpClient.get<PageApiModel>('/pokemon');
   }
 
-  async getPokemonById(pokemonId: string): Promise<PokemonApiModel> {
+  async getPokemonById(pokemonId: number): Promise<PokemonApiModel> {
     return this.httpClient.get<PokemonApiModel>(`/pokemon/${pokemonId}`);
   }
 
   async getPokemonSpeciesById(
-    pokemonId: string,
+    pokemonId: number,
   ): Promise<PokemonSpeciesApiModel> {
     return this.httpClient.get<PokemonSpeciesApiModel>(
       `/pokemon-species/${pokemonId}`,
