@@ -56,4 +56,7 @@ export const styles = StyleSheet.create({
   skeletonTitle: {
     alignSelf: 'center',
   },
+  skeletonItemWithMarginBottom: {
+    marginBottom: 10,
+  },
 });

@@ -98,16 +98,18 @@ const PokemonDetails = ({ route }: Props) => {
 const PokemonDetailsSkeleton = () => (
   <ScrollView>
     <Skeleton accessibilityLabel="Cargando detalles del pokémon">
-      <View style={styles.header}>
-        <View style={styles.skeletonMetaData}>
-          {Array.from({ length: 3 }, (_, index) => (
-            <View key={index} style={styles.skeletonMetaDataItem}>
-              <Skeleton.Item height={18} width={64} />
-              <Skeleton.Item height={16} width={88} />
-            </View>
-          ))}
+      <View style={styles.skeletonItemWithMarginBottom}>
+        <View style={styles.header}>
+          <View style={styles.skeletonMetaData}>
+            {Array.from({ length: 3 }, (_, index) => (
+              <View key={index} style={styles.skeletonMetaDataItem}>
+                <Skeleton.Item height={18} width={64} />
+                <Skeleton.Item height={16} width={88} />
+              </View>
+            ))}
+          </View>
+          <Skeleton.Item borderRadius={150} height={260} width={260} />
         </View>
-        <Skeleton.Item borderRadius={150} height={260} width={260} />
       </View>
 
       <View style={styles.skeletonContent}>
@@ -119,9 +121,15 @@ const PokemonDetailsSkeleton = () => (
         </View>
 
         <View style={styles.description}>
-          <Skeleton.Item height={18} width={100} />
-          <Skeleton.Item height={16} width="100%" />
-          <Skeleton.Item height={16} width="85%" />
+          <View style={styles.skeletonItemWithMarginBottom}>
+            <Skeleton.Item height={18} width={100} />
+          </View>
+          <View style={styles.skeletonItemWithMarginBottom}>
+            <Skeleton.Item height={16} width="100%" />
+          </View>
+          <View style={styles.skeletonItemWithMarginBottom}>
+            <Skeleton.Item height={16} width="85%" />
+          </View>
         </View>
 
         <View style={styles.statsSection}>
@@ -129,7 +137,6 @@ const PokemonDetailsSkeleton = () => (
           <View style={styles.statsList}>
             {Array.from({ length: STAT_SKELETON_ITEMS }, (_, index) => (
               <View key={index} style={styles.statRow}>
-                <Skeleton.Item height={20} width={130} />
                 <Skeleton.Item
                   borderRadius={999}
                   height={10}
