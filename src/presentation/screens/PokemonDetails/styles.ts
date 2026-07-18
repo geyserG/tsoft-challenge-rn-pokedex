@@ -44,4 +44,16 @@ export const styles = StyleSheet.create({
   statProgress: {
     flex: 1,
   },
+  skeletonMetaData: {
+    gap: 20,
+  },
+  skeletonMetaDataItem: {
+    gap: 6,
+  },
+  skeletonContent: {
+    gap: 20,
+  },
+  skeletonTitle: {
+    alignSelf: 'center',
+  },
 });

@@ -7,7 +7,7 @@ import { pokemonTypes } from '../screens/constants';
 
 const usePokemonById = (pokemonId: string): UsePokemonByIdState => {
   const [pokemon, setPokemon] = useState<Pokemon | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const loadPokemon = () =>
