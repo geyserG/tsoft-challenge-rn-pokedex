@@ -1,0 +1,22 @@
+# Dependencies and generated artifacts
+node_modules/
+coverage/
+build/
+android/.gradle/
+android/app/build/
+android/app/.cxx/
+ios/Pods/
+ios/build/
+ios/**/Images.xcassets/
+vendor/
+
+# Native and binary project files
+*.pbxproj
+*.lock
+*.png
+*.jar
+
+# Local tooling
+.bundle/
+.idea/
+.vscode/

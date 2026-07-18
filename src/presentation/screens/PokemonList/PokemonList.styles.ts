@@ -1,0 +1,17 @@
+import { StyleSheet } from 'react-native';
+
+export const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  content: {
+    padding: 16,
+  },
+  item: {
+    marginBottom: 16,
+  },
+  title: {
+    marginBottom: 16,
+  },
+  skeletonItemContent: { marginBottom: 10 },
+});

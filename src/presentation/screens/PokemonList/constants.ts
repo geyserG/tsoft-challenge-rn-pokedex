@@ -1,0 +1,1 @@
+export const INITIAL_ITEMS_TO_RENDER = 20;
