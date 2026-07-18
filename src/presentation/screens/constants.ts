@@ -18,3 +18,5 @@ export const pokemonTypes: Readonly<Record<string, string>> = {
   steel: 'Acero',
   fairy: 'Hada',
 };
+
+export const primaryColorPokedex = '#D2242A';

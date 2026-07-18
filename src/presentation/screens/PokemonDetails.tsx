@@ -1,9 +1,10 @@
-import { View, ScrollView, Image, StyleSheet, StatusBar } from 'react-native';
+import { View, ScrollView, Image, StyleSheet } from 'react-native';
 import React from 'react';
 import type { StaticScreenProps } from '@react-navigation/native';
 import type { PokemonDetailsParams } from '../navigation/types';
 import { usePokemonById } from '../hooks/usePokemonById';
 import { Text } from '../components';
+import { primaryColorPokedex } from './constants';
 
 type Props = StaticScreenProps<PokemonDetailsParams>;
 
@@ -49,8 +50,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-evenly',
-    experimental_backgroundImage:
-      'linear-gradient(180deg, #D2242A, #D2242A, white)',
+    experimental_backgroundImage: `linear-gradient(180deg, ${primaryColorPokedex}, ${primaryColorPokedex}, white)`,
   },
   image: {
     paddingLeft: 10,

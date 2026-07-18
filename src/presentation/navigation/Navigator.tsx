@@ -4,6 +4,7 @@ import PokemonList from '../screens/PokemonList/PokemonList';
 import PokemonDetails from '../screens/PokemonDetails';
 import PokemonListEmptyState from '../screens/PokemonListEmptyState';
 import PokemonDetailsEmptyState from '../screens/PokemonDetailsEmptyState';
+import { primaryColorPokedex } from '../screens/constants';
 
 export const RootStack = createNativeStackNavigator({
   initialRouteName: 'Home',
@@ -19,7 +20,7 @@ export const RootStack = createNativeStackNavigator({
       options: {
         headerShadowVisible: false,
         headerStyle: {
-          backgroundColor: '#D2242A',
+          backgroundColor: primaryColorPokedex,
         },
         title: '',
       },
