@@ -10,7 +10,7 @@ type Props = StaticScreenProps<PokemonDetailsParams>;
 
 const PokemonDetails = ({ route }: Props) => {
   const { pokemonId } = route.params;
-  const { pokemon, loading } = usePokemonById(pokemonId);
+  const { pokemon } = usePokemonById(pokemonId);
 
   return (
     <ScrollView>
@@ -36,9 +36,24 @@ const PokemonDetails = ({ route }: Props) => {
           height={300}
         />
       </View>
-      <Text variant="titlepage" style={styles.title}>
-        {pokemon?.pokemonName}
-      </Text>
+      <View>
+        <Text variant="titlepage" style={styles.title}>
+          {pokemon?.pokemonName}
+        </Text>
+
+        <View style={styles.othersMetaData}>
+          <View>
+            <Text.Emphasis>Categoría</Text.Emphasis>
+            <Text>{pokemon?.species}</Text>
+          </View>
+          <View>
+            <Text.Emphasis>Habilidad</Text.Emphasis>
+            <Text>{pokemon?.abilities.join(', ')}</Text>
+          </View>
+        </View>
+
+        <Text style={styles.description}>{pokemon?.description}</Text>
+      </View>
     </ScrollView>
   );
 };
@@ -49,8 +64,9 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-evenly',
+    justifyContent: 'space-around',
     experimental_backgroundImage: `linear-gradient(180deg, ${primaryColorPokedex}, ${primaryColorPokedex}, white)`,
+    paddingHorizontal: 16,
   },
   image: {
     paddingLeft: 10,
@@ -62,4 +78,12 @@ const styles = StyleSheet.create({
     gap: 16,
   },
   title: { textAlign: 'center' },
+  description: {
+    paddingHorizontal: 16,
+  },
+  othersMetaData: {
+    padding: 16,
+    flexDirection: 'row',
+    gap: 16,
+  },
 });

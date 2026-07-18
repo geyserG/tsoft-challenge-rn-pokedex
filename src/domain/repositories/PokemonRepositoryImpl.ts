@@ -15,10 +15,11 @@ export class PokemonRepositoryImpl implements PokemonRepository {
   }
 
   async fetchPokemonById(pokemonId: string): Promise<Pokemon> {
-    const pokemonApiModel = await this.remoteDataSource.getPokemonById(
-      pokemonId,
-    );
+    const [pokemonApiModel, pokemonSpeciesApiModel] = await Promise.all([
+      this.remoteDataSource.getPokemonById(pokemonId),
+      this.remoteDataSource.getPokemonSpeciesById(pokemonId),
+    ]);
 
-    return PokemonMapper.parseToDomain(pokemonApiModel);
+    return PokemonMapper.parseToDomain(pokemonApiModel, pokemonSpeciesApiModel);
   }
 }

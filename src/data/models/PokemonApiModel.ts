@@ -7,12 +7,18 @@ export interface PokemonApiModel {
   order: number;
   weight: number;
   location_area_encounters: string;
-  abilities: any[];
+  abilities: {
+    ability: {
+      name: string;
+    };
+  }[];
   forms: any[];
   game_indices: any[];
   held_items: any[];
   moves: any[];
-  species: any[];
+  species: {
+    name: string;
+  };
   sprites: {
     front_default: string;
     other: {
