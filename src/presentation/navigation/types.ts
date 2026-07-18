@@ -1,3 +1,3 @@
 export type PokemonDetailsParams = {
-  pokemonId: number;
+  pokemonId: string;
 };

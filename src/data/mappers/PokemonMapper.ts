@@ -7,6 +7,9 @@ export class PokemonMapper {
       pokemonId: model.id,
       pokemonName: model.name,
       imageLarge: model.sprites.other['official-artwork'].front_default,
+      type: model.types[0].type.name,
+      heightInMeters: model.height / 10,
+      weightInKilograms: model.weight / 10,
     };
   }
 }
