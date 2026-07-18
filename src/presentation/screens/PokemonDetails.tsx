@@ -3,8 +3,10 @@ import React from 'react';
 import type { StaticScreenProps } from '@react-navigation/native';
 import type { PokemonDetailsParams } from '../navigation/types';
 import { usePokemonById } from '../hooks/usePokemonById';
-import { Text } from '../components';
-import { primaryColorPokedex } from './constants';
+import { ProgressBar, Text } from '../components';
+import { pokemonStatLabels, primaryColorPokedex } from './constants';
+
+const MAX_BASE_STAT = 255;
 
 type Props = StaticScreenProps<PokemonDetailsParams>;
 
@@ -52,7 +54,36 @@ const PokemonDetails = ({ route }: Props) => {
           </View>
         </View>
 
-        <Text style={styles.description}>{pokemon?.description}</Text>
+        <View style={styles.description}>
+          <Text.Emphasis>Descripción</Text.Emphasis>
+          <Text>{pokemon?.description}</Text>
+        </View>
+
+        <View style={styles.statsSection}>
+          <Text variant="title">Estadísticas</Text>
+          <View style={styles.statsList}>
+            {pokemon?.stats.map(stat => (
+              <View key={stat.name} style={styles.statRow}>
+                <Text style={styles.statLabel}>
+                  {pokemonStatLabels[stat.name] ??
+                    stat.name.replaceAll('-', ' ')}
+                </Text>
+                <ProgressBar
+                  accessibilityLabel={`${
+                    pokemonStatLabels[stat.name] ?? stat.name
+                  }: ${stat.value}`}
+                  max={MAX_BASE_STAT}
+                  style={styles.statProgress}
+                  value={stat.value}
+                >
+                  <ProgressBar.Track>
+                    <ProgressBar.Indicator />
+                  </ProgressBar.Track>
+                </ProgressBar>
+              </View>
+            ))}
+          </View>
+        </View>
       </View>
     </ScrollView>
   );
@@ -73,7 +104,7 @@ const styles = StyleSheet.create({
   },
   metaData: {
     margin: 0,
-    height: '100%',
+    // height: '100%',
     justifyContent: 'center',
     gap: 16,
   },
@@ -85,5 +116,23 @@ const styles = StyleSheet.create({
     padding: 16,
     flexDirection: 'row',
     gap: 16,
+  },
+  statsSection: {
+    gap: 24,
+    padding: 16,
+    marginBottom: 20,
+  },
+  statsList: {
+    gap: 20,
+  },
+  statRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  statLabel: {
+    width: 150,
+  },
+  statProgress: {
+    flex: 1,
   },
 });

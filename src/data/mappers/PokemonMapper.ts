@@ -17,6 +17,10 @@ export class PokemonMapper {
       species: model.species.name,
       abilities: model.abilities.map(item => item.ability.name),
       description: this.getDescription(speciesModel),
+      stats: model.stats.map(item => ({
+        name: item.stat.name,
+        value: item.base_stat,
+      })),
     };
   }
 

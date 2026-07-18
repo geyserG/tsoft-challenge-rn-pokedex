@@ -28,7 +28,12 @@ export interface PokemonApiModel {
     };
   };
   cries: any[];
-  stats: any[];
+  stats: {
+    base_stat: number;
+    stat: {
+      name: string;
+    };
+  }[];
   types: any[];
   past_types: any[];
   past_abilities: any[];

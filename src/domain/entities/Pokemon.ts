@@ -8,4 +8,10 @@ export interface Pokemon {
   species: string;
   abilities: string[];
   description: string;
+  stats: PokemonStat[];
+}
+
+export interface PokemonStat {
+  name: string;
+  value: number;
 }
