@@ -39,7 +39,15 @@ Husky runs `yarn lint` before every commit. A commit is rejected when linting fa
 
 ## Architecture and technical decisions
 
-The project follows Clean Architecture to keep business rules independent from React Native and the UI. API models and data sources belong to the data layer, repositories and use cases expose domain operations, and hooks adapt those operations for presentation.
+The project uses layers inspired by Clean Architecture to separate React Native UI, presentation hooks, use cases, repositories, and remote access. It is not a strict implementation yet: `PokemonRepositoryImpl` is located in `domain` while importing data-layer sources and mappers. Moving that implementation to `data` would restore the expected inward dependency direction.
+
+### SOLID principles
+
+SOLID was not implemented in full. The principles currently evidenced by the code are:
+
+- **Single Responsibility:** screens render UI, hooks manage presentation state, use cases represent operations, mappers transform models, repositories coordinate data, and data sources perform remote access.
+- **Dependency Inversion:** use cases depend on the `PokemonRepository` abstraction, and the remote data source depends on `HttpClient`. Concrete objects are composed in `src/app/container/dependencies.ts`.
+- **Open/Closed, partially:** the repository, data-source, and HTTP interfaces make alternative implementations possible without changing their consumers. The current layer placement still limits this separation.
 
 Reusable UI components follow Atomic Design and are grouped into atoms and molecules under `src/presentation/components`. Components such as `Text`, `Button`, `Skeleton`, `ProgressBar`, and `CardItem` use TypeScript, Compound Components where appropriate, and individual style, type, and documentation files.
 
@@ -51,7 +59,7 @@ Reusable UI components follow Atomic Design and are grouped into atoms and molec
 
 ## Completed work
 
-1. Applied Clean Architecture to separate business logic, data access, and presentation.
+1. Added Clean Architecture-inspired layers to separate business logic, data access, and presentation, with the dependency-direction limitation documented above.
 2. Built the home screen with a Pokémon list, Skeleton loading state, and infinite scrolling. PokéAPI results are requested and appended in pages of 20 Pokémon.
 3. Built the Pokémon details screen with general information, description, statistics, progress bars, and a Skeleton loading state.
 
