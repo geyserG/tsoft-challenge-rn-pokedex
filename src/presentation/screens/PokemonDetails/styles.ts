@@ -32,7 +32,7 @@ export const styles = StyleSheet.create({
     marginBottom: 20,
   },
   statsList: {
-    gap: 20,
+    gap: 10,
   },
   statRow: {
     alignItems: 'center',
