@@ -67,6 +67,7 @@ Reusable UI components follow Atomic Design and are grouped into atoms and molec
 
 1. Implement offline data storage, caching, and synchronization behavior.
 2. Complete the empty-state screens for both the home list and Pokémon details.
+3. Add automated tests, including unit tests for use cases and mappers, contract tests for repository and data-source implementations, and integration or component tests for the main user flows.
 
 ## Image-loading trade-off
 
