@@ -43,15 +43,15 @@ Husky runs `yarn lint` before every commit. A commit is rejected when linting fa
 
 ## Architecture and technical decisions
 
-The project uses layers inspired by Clean Architecture to separate React Native UI, presentation hooks, use cases, repositories, and remote access. It is not a strict implementation yet: `PokemonRepositoryImpl` is located in `domain` while importing data-layer sources and mappers. Moving that implementation to `data` would restore the expected inward dependency direction.
+The project uses layers inspired by Clean Architecture to separate React Native UI, presentation hooks, use cases, repositories, and remote access. It is not a strict implementation yet: `PokemonRepositoryImpl` is located in `domain` while importing data-layer sources and mappers.
 
 ### SOLID principles
 
 SOLID was not implemented in full. The principles currently evidenced by the code are:
 
 - **Single Responsibility:** screens render UI, hooks manage presentation state, use cases represent operations, mappers transform models, repositories coordinate data, and data sources perform remote access.
-- **Dependency Inversion:** use cases depend on the `PokemonRepository` abstraction, and the remote data source depends on `HttpClient`. Concrete objects are composed in `src/app/container/dependencies.ts`.
 - **Open/Closed, partially:** the repository, data-source, and HTTP interfaces make alternative implementations possible without changing their consumers. The current layer placement still limits this separation.
+- **Dependency Inversion:** use cases depend on the `PokemonRepository` abstraction, and the remote data source depends on `HttpClient`. Concrete objects are composed in `src/app/container/dependencies.ts`.
 
 Reusable UI components follow Atomic Design and are grouped into atoms and molecules under `src/presentation/components`. Components such as `Text`, `Button`, `Skeleton`, `ProgressBar`, and `CardItem` use TypeScript, Compound Components where appropriate, and individual style, type, and documentation files.
 
