@@ -6,7 +6,7 @@ import type {
 } from './usePokemonList.types';
 import { toPokemonListItem } from './utils';
 import { POKEMON_PAGE_SIZE } from './constants';
-import { LoadPokemonListParams } from './usePokemonById.types';
+import { LoadPokemonListParams } from './usePokemonList.types';
 
 const usePokemonList = (): UsePokemonListState => {
   const [page, setPage] = useState<PokemonListPage>({
