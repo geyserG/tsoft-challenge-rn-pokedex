@@ -1,6 +1,6 @@
-import type { Page } from '../entities/Page';
-import type { Pokemon } from '../entities/Pokemon';
-import type { PokemonRepository } from './PokemonRepository';
+import type { Page } from '../../domain/entities/Page';
+import type { Pokemon } from '../../domain/entities/Pokemon';
+import type { PokemonRepository } from '../../domain/repositories/PokemonRepository';
 import type { PokemonRemoteDataSource } from '../../data/datasources/PokemonRemoteDataSource';
 import { PageMapper } from '../../data/mappers/PageMapper';
 import { PokemonMapper } from '../../data/mappers/PokemonMapper';

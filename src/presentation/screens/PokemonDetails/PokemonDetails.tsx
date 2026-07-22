@@ -67,7 +67,7 @@ const PokemonDetails = ({ route }: Props) => {
           <Text variant="title">Estadísticas</Text>
           <View style={styles.statsList}>
             {pokemon?.stats.map(stat => (
-              <Stat name={stat.name} value={stat.value} />
+              <Stat key={stat.name} name={stat.name} value={stat.value} />
             ))}
           </View>
         </View>

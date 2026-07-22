@@ -20,7 +20,6 @@ const PokemonDetailsSkeleton = () => {
             </View>
             <Skeleton.Item borderRadius={150} height={260} width={260} />
           </View>
-          o
         </View>
 
         <View style={styles.skeletonContent}>
