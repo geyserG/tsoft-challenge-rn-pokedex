@@ -66,7 +66,18 @@ El flujo de una petición es:
 Pantalla → Hook → Caso de uso → Repositorio → Data source → HTTP → PokéAPI
 ```
 
-La UI utiliza Atomic Design para organizar sus componentes en átomos y moléculas.
+La UI utiliza Atomic Design para organizar sus componentes en átomos y moléculas. Los componentes reutilizables `Button`, `Text`, `ProgressBar`, `Skeleton` y `CardItem` aplican el patrón Compound Components para exponer subcomponentes relacionados mediante una API declarativa y mantener internamente su estado y comportamiento compartido.
+
+## SOLID aplicado
+
+Solo se consideran aplicados los casos visibles directamente en el código:
+
+- **Responsabilidad única (SRP):** `GetPokemonList` y `GetPokemonById` representan una operación cada uno. Los mappers solo transforman modelos de API a entidades, `PokeApiDataSource` define las llamadas a PokéAPI y `PokemonRepositoryImpl` coordina la obtención y transformación de datos.
+- **Abierto/cerrado (OCP):** los consumidores reciben contratos como `PokemonRepository`, `PokemonDataSource` y `HttpClient`. Es posible agregar otra implementación y seleccionarla en `src/main/dependencies.ts` sin modificar el consumidor.
+- **Segregación de interfaces (ISP):** cada contrato de caso de uso expone únicamente su propia operación y `HttpClient` contiene solo el método `get` que necesita la aplicación.
+- **Inversión de dependencias (DIP):** los casos de uso dependen de `PokemonRepository`, el repositorio concreto depende de `PokemonDataSource` y `PokeApiDataSource` depende de `HttpClient`. Las implementaciones se conectan únicamente en `src/main/dependencies.ts`.
+
+No se afirma un cumplimiento completo de SOLID. En particular, Liskov no está demostrado porque actualmente solo existe una implementación por contrato y no hay pruebas de contrato que validen sustituciones. Además, cada caso de uso depende de `PokemonRepository`, que contiene operaciones de lista y detalle, por lo que la segregación de interfaces todavía puede mejorarse.
 
 ## Comandos
 
