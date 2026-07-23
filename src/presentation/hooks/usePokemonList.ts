@@ -1,14 +1,18 @@
 import { useEffect, useRef, useState } from 'react';
-import { dependencies } from '../../app/container/dependencies';
 import type {
   PokemonListPage,
   UsePokemonListState,
 } from './usePokemonList.types';
 import { toPokemonListItem } from './utils';
 import { POKEMON_PAGE_SIZE } from './constants';
-import { LoadPokemonListParams } from './usePokemonById.types';
+import { LoadPokemonListParams } from './usePokemonList.types';
+import type { GetPokemonListUseCase } from './PokemonUseCase';
 
-const usePokemonList = (): UsePokemonListState => {
+const usePokemonList = ({
+  getPokemonList,
+}: {
+  getPokemonList: GetPokemonListUseCase;
+}): UsePokemonListState => {
   const [page, setPage] = useState<PokemonListPage>({
     total: 0,
     nextPage: '',
@@ -29,6 +33,7 @@ const usePokemonList = (): UsePokemonListState => {
       setLoading,
       setLoadingMore,
       setPage,
+      getPokemonList,
     });
 
   const loadMore = () => {
@@ -44,6 +49,7 @@ const usePokemonList = (): UsePokemonListState => {
       setLoading,
       setLoadingMore,
       setPage,
+      getPokemonList,
     });
   };
 
@@ -56,8 +62,9 @@ const usePokemonList = (): UsePokemonListState => {
       setLoading,
       setLoadingMore,
       setPage,
+      getPokemonList,
     });
-  }, []);
+  }, [getPokemonList]);
 
   return {
     page,
@@ -78,6 +85,7 @@ const loadPokemonList = async ({
   setLoading,
   setLoadingMore,
   setError,
+  getPokemonList,
 }: LoadPokemonListParams): Promise<void> => {
   if (requestLock.current) {
     return;
@@ -88,10 +96,7 @@ const loadPokemonList = async ({
     append ? setLoadingMore(true) : setLoading(true);
     setError(null);
 
-    const pageResult = await dependencies.getPokemonList.execute(
-      offset,
-      POKEMON_PAGE_SIZE,
-    );
+    const pageResult = await getPokemonList.execute(offset, POKEMON_PAGE_SIZE);
     const results = pageResult.results.map(toPokemonListItem);
 
     setPage(currentPage => ({

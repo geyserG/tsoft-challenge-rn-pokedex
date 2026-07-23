@@ -12,16 +12,6 @@ export class FetchHttpClient implements HttpClient {
     return this.request<T>(url, { method: 'GET' });
   }
 
-  post<TResponse, TBody>(url: string, body: TBody): Promise<TResponse> {
-    return this.request<TResponse>(url, {
-      body: JSON.stringify(body),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-    });
-  }
-
   private async request<T>(url: string, init: RequestInit): Promise<T> {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), this.timeoutMs);

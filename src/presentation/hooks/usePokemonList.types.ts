@@ -1,4 +1,6 @@
+import { Dispatch, SetStateAction } from 'react';
 import type { Page } from '../../domain/entities/Page';
+import { GetPokemonListUseCase } from './PokemonUseCase';
 
 export interface PokemonListItem {
   pokemonId: number;
@@ -18,4 +20,19 @@ export interface UsePokemonListState {
   error: string | null;
   loadMore: () => Promise<void>;
   reload: () => Promise<void>;
+}
+
+interface RequestLock {
+  current: boolean;
+}
+
+export interface LoadPokemonListParams {
+  append: boolean;
+  offset: number;
+  requestLock: RequestLock;
+  setPage: Dispatch<SetStateAction<PokemonListPage>>;
+  setLoading: Dispatch<SetStateAction<boolean>>;
+  setLoadingMore: Dispatch<SetStateAction<boolean>>;
+  setError: Dispatch<SetStateAction<string | null>>;
+  getPokemonList: GetPokemonListUseCase;
 }

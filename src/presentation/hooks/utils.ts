@@ -1,3 +1,4 @@
+import { capitalizeFirstLetter } from '../utils';
 import { POKEMON_IMAGE_BASE_URL } from './constants';
 import type { PokemonListItem } from './usePokemonList.types';
 
@@ -12,14 +13,6 @@ export const toPokemonListItem = (result: {
     pokemonId,
     pokemonName: capitalizeFirstLetter(result.pokemonName),
   };
-};
-
-export const capitalizeFirstLetter = (value: string): string => {
-  if (!value) {
-    return value;
-  }
-
-  return `${value.charAt(0).toUpperCase()}${value.slice(1)}`;
 };
 
 export const extractPokemonId = (url: string): number => {

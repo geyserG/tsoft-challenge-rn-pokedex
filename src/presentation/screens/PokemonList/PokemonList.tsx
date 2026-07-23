@@ -7,11 +7,15 @@ import { styles } from './PokemonList.styles';
 import { usePokemonList } from '../../hooks/usePokemonList';
 import { SkeletonContent } from './PokemonList.Skeleton';
 import { PokemonListItem } from './types';
+import { useDependencies } from '../../contexts/DependenciesContext';
 
 const EMPTY_POKEMON_LIST: PokemonListItem[] = [];
 
 const PokemonList = () => {
-  const { page, loading, loadingMore, loadMore, reload } = usePokemonList();
+  const { getPokemonList } = useDependencies();
+  const { page, loading, loadingMore, loadMore, reload } = usePokemonList({
+    getPokemonList,
+  });
   const navigation = useNavigation();
 
   const renderItems: ListRenderItem<PokemonListItem> = ({ item }) => (

@@ -2,7 +2,7 @@ import { GetPokemonList } from '../../domain/usecases/GetPokemonList';
 import { GetPokemonById } from '../../domain/usecases/GetPokemonById';
 import { FetchHttpClient } from '../../infrastructure/http/FetchHttpClient';
 import { PokemonRemoteDataSourceImpl } from '../../data/datasources/PokemonRemoteDataSourceImpl';
-import { PokemonRepositoryImpl } from '../../domain/repositories/PokemonRepositoryImpl';
+import { PokemonRepositoryImpl } from '../../data/repositories/PokemonRepositoryImpl';
 
 const httpClient = new FetchHttpClient('https://pokeapi.co/api/v2');
 

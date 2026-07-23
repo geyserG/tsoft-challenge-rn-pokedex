@@ -7,12 +7,14 @@ import { Text } from '../../components';
 import { styles } from './styles';
 import PokemonDetailsSkeleton from './PokemonDetails.Skeleton';
 import Stat from './Stat';
+import { useDependencies } from '../../contexts/DependenciesContext';
 
 type Props = StaticScreenProps<PokemonDetailsParams>;
 
 const PokemonDetails = ({ route }: Props) => {
+  const { getPokemonById } = useDependencies();
   const { pokemonId } = route.params;
-  const { pokemon, loading } = usePokemonById(pokemonId);
+  const { pokemon, loading } = usePokemonById(pokemonId, getPokemonById);
 
   if (loading) {
     return <PokemonDetailsSkeleton />;
@@ -67,7 +69,7 @@ const PokemonDetails = ({ route }: Props) => {
           <Text variant="title">Estadísticas</Text>
           <View style={styles.statsList}>
             {pokemon?.stats.map(stat => (
-              <Stat name={stat.name} value={stat.value} />
+              <Stat key={stat.name} name={stat.name} value={stat.value} />
             ))}
           </View>
         </View>
