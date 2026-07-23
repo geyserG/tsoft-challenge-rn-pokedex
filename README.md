@@ -1,27 +1,34 @@
 # Pokédex
 
-A React Native Pokédex built with TypeScript, React 19, and the native PokéAPI.
+A mobile application built with React Native and TypeScript that consumes [PokéAPI](https://pokeapi.co/).
+
+## Features
+
+- Paginated Pokémon list with infinite scrolling.
+- Skeleton loading states.
+- Details, description, and statistics for each Pokémon.
+- Native navigation between the list and details screens.
 
 ## Demo
 
 [Watch the application demo](./demo.mov).
 
-## Getting started
+## Running the project
 
 Requirements:
 
-- Node.js 22.11 or later
-- Yarn 1.22
-- The native React Native environment for iOS or Android
+- Node.js 22.11 or later.
+- Yarn 1.22.
+- A React Native environment configured for iOS or Android.
 
-Install dependencies and iOS pods:
+Install the dependencies:
 
 ```sh
 yarn install
 cd ios && bundle exec pod install && cd ..
 ```
 
-Run the application:
+Start the application:
 
 ```sh
 yarn ios
@@ -29,56 +36,67 @@ yarn ios
 yarn android
 ```
 
-Useful commands:
+## Architecture
 
-```sh
-yarn lint
-yarn format:check
-yarn typecheck
-yarn test
-yarn validate
+The code is organized according to the four Clean Architecture layers:
+
+```text
+frameworks-drivers
+        ↓
+interface-adapters
+        ↓
+use-cases
+        ↓
+entities
 ```
 
-Husky runs `yarn lint` before every commit. A commit is rejected when linting fails.
+| Directory                | Responsibility                                              |
+| ------------------------ | ----------------------------------------------------------- |
+| `src/entities`           | Core business entities and data structures.                 |
+| `src/use-cases`          | Application operations and their contracts.                 |
+| `src/interface-adapters` | Ports, repositories, data sources, API models, and mappers. |
+| `src/frameworks-drivers` | React Native UI and the concrete HTTP client.               |
+| `src/main`               | Dependency construction and injection.                      |
 
-## Architecture and technical decisions
+Code dependencies point toward the inner layers. For example, use cases depend on `PokemonRepository`, not on its concrete implementation.
 
-The project uses layers inspired by Clean Architecture to separate React Native UI, presentation hooks, use cases, repositories, and remote access. Repository contracts remain in `domain`, while their concrete implementations and API-to-domain mapping live in `data`. Application dependencies are created in the composition root at `src/app/container/dependencies.ts` and supplied to the presentation layer through `DependenciesProvider`.
+The request flow is:
 
-### SOLID principles
+```text
+Screen → Hook → Use case → Repository → Data source → HTTP → PokéAPI
+```
 
-SOLID is used as design guidance rather than claimed as fully implemented or formally verified. The current assessment is:
+The UI uses Atomic Design to organize components into atoms and molecules. The reusable `Button`, `Text`, `ProgressBar`, `Skeleton`, and `CardItem` components follow the Compound Components pattern, exposing related subcomponents through a declarative API while keeping shared state and behavior internal.
 
-- **Single Responsibility Principle — mostly applied.** Screens focus on rendering and navigation, hooks coordinate presentation state and requests, view-model functions prepare domain data for display, use cases represent application operations, mappers translate API responses, repositories coordinate data retrieval, and data sources handle API endpoints. Some modules still have more than one reason to change: hooks contain both React state orchestration and request-flow logic, while `FetchHttpClient` combines request execution, URL construction, timeout handling, response parsing, and HTTP error creation. These responsibilities are cohesive at the current size, but may need separation if their behavior grows.
-- **Open/Closed Principle — partially applied.** `PokemonRepository`, `PokemonRemoteDataSource`, `HttpClient`, and the presentation use-case contracts provide extension points. A compatible HTTP client, repository, data source, or test double can be added without changing its direct consumer. The application is not completely closed to modification: adding new capabilities still requires composition changes and may require extending the existing repository or data-source interfaces.
-- **Liskov Substitution Principle — supported by design, not yet verified.** TypeScript contracts define compatible method signatures, so `FetchHttpClient` and the real use cases can theoretically be replaced with conforming implementations. However, the project currently has no alternative production implementations or contract tests proving that replacements preserve expected behavior, error semantics, and return values. LSP should therefore not yet be considered demonstrated.
-- **Interface Segregation Principle — partially applied.** `HttpClient` exposes only the `get` operation currently required, and presentation hooks receive small, operation-specific `GetPokemonListUseCase` and `GetPokemonByIdUseCase` contracts. In contrast, both domain use cases depend on the broader `PokemonRepository` interface, and `PokemonRemoteDataSource` groups list, detail, and species operations. These interfaces are still small, but consumers know about contracts containing methods they do not use directly.
-- **Dependency Inversion Principle — largely applied.** Domain use cases depend on the `PokemonRepository` abstraction; `PokemonRepositoryImpl` depends on `PokemonRemoteDataSource`; and `PokemonRemoteDataSourceImpl` depends on `HttpClient`. Concrete objects are assembled in `src/app/container/dependencies.ts` and distributed through `DependenciesProvider`. Presentation hooks receive use-case abstractions instead of importing the global container. One remaining architectural limitation is that the use-case contracts consumed by the hooks live under `presentation`; moving those input contracts to the domain or application boundary would make their ownership and dependency direction clearer.
+## SOLID principles
 
-The design creates useful seams for isolated testing, but testability should not be confused with tested behavior. Fakes and stubs can be injected without real network requests; automated unit and contract tests are still pending.
+Only cases directly visible in the code are considered applied:
 
-Reusable UI components follow Atomic Design and are grouped into atoms and molecules under `src/presentation/components`. Components such as `Text`, `Button`, `Skeleton`, `ProgressBar`, and `CardItem` use TypeScript, Compound Components where appropriate, and individual style, type, and documentation files.
+- **Single Responsibility Principle (SRP):** `GetPokemonList` and `GetPokemonById` each represent one operation. Mappers only transform API models into entities, `PokeApiDataSource` defines PokéAPI requests, and `PokemonRepositoryImpl` coordinates data retrieval and transformation.
+- **Open/Closed Principle (OCP):** consumers receive contracts such as `PokemonRepository`, `PokemonDataSource`, and `HttpClient`. Another implementation can be added and selected in `src/main/dependencies.ts` without modifying its consumer.
+- **Interface Segregation Principle (ISP):** each use-case contract exposes only its own operation, and `HttpClient` contains only the `get` method required by the application.
+- **Dependency Inversion Principle (DIP):** use cases depend on `PokemonRepository`, the concrete repository depends on `PokemonDataSource`, and `PokeApiDataSource` depends on `HttpClient`. Implementations are connected only in `src/main/dependencies.ts`.
 
-[React Navigation](https://reactnavigation.org/) with Native Stack provides typed routes, native transitions, headers, and platform gestures while keeping navigation outside business logic.
+The project does not claim complete SOLID compliance. In particular, Liskov Substitution has not been demonstrated because there is currently only one implementation per contract and no contract tests validating substitutions. In addition, each use case depends on `PokemonRepository`, which contains both list and detail operations, so interface segregation can still be improved.
 
-[React Compiler](https://react.dev/learn/react-compiler) is the default memoization strategy. Components remain pure without adding `React.memo`, `useMemo`, or `useCallback` preemptively. Redux and Zustand were not added because the current state is local, navigation-owned, or accessed through use cases and repositories; a global client store would add another source of truth without solving a current requirement.
+## Commands
 
-[AsyncStorage](https://github.com/react-native-async-storage/async-storage) was selected over MMKV for future small, asynchronous, non-sensitive persisted values. The project does not currently require synchronous, high-frequency storage or MMKV's additional native integration. Offline data support is still pending.
+```sh
+yarn lint          # Analyze the code
+yarn format:check  # Check formatting
+yarn typecheck     # Check types
+yarn test          # Run tests
+yarn validate      # Run all validations
+```
 
-## Completed work
-
-1. Added Clean Architecture-inspired layers to separate business logic, data access, and presentation. Repository abstractions remain in the domain layer, concrete implementations live in the data layer, and presentation dependencies are injected through React context.
-2. Built the home screen with a Pokémon list, Skeleton loading state, and infinite scrolling. PokéAPI results are requested and appended in pages of 20 Pokémon.
-3. Built the Pokémon details screen with general information, description, statistics, progress bars, and a Skeleton loading state.
+Husky runs `yarn lint` before every commit.
 
 ## Pending work
 
-1. Implement offline data storage, caching, and synchronization behavior.
-2. Complete the empty-state screens for both the home list and Pokémon details.
-3. Add automated tests, including unit tests for use cases and mappers, contract tests for repository and data-source implementations, and integration or component tests for the main user flows.
+- Add local storage and offline support.
+- Complete the empty states.
+- Expand unit, integration, and contract tests.
 
-## Image-loading trade-off
+## Image-loading decision
 
-The Pokémon list endpoint returns names and detail URLs but not the artwork needed by the home cards. Requesting the documented detail endpoint for every item would add up to 20 extra requests per page, making a simple list unnecessarily expensive and slower to display.
-
-For that reason, list artwork URLs are constructed directly from the Pokémon ID using the public sprite endpoint. This reduces each page to one list request while preserving detail endpoint requests for the details screen, where the additional data is actually required. The trade-off is that the presentation mapping depends on the sprite URL convention and must be updated if that external path changes.
+The list endpoint does not include artwork. To avoid an additional request for every Pokémon, the application builds the sprite URL from its ID. This means each page requires only one list request.

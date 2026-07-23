@@ -1,8 +1,8 @@
 import { StyleSheet, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import Navigation from './src/presentation/navigation/Navigator';
-import { DependenciesProvider } from './src/presentation/contexts/DependenciesContext';
-import { dependencies } from './src/app/container/dependencies';
+import Navigation from './src/frameworks-drivers/ui/navigation/Navigator';
+import { DependenciesProvider } from './src/frameworks-drivers/ui/contexts/DependenciesContext';
+import { dependencies } from './src/main/dependencies';
 
 function App() {
   return (
