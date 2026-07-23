@@ -43,15 +43,19 @@ Husky runs `yarn lint` before every commit. A commit is rejected when linting fa
 
 ## Architecture and technical decisions
 
-The project uses layers inspired by Clean Architecture to separate React Native UI, presentation hooks, use cases, repositories, and remote access. It is not a strict implementation yet: `PokemonRepositoryImpl` is located in `domain` while importing data-layer sources and mappers.
+The project uses layers inspired by Clean Architecture to separate React Native UI, presentation hooks, use cases, repositories, and remote access. Repository contracts remain in `domain`, while their concrete implementations and API-to-domain mapping live in `data`. Application dependencies are created in the composition root at `src/app/container/dependencies.ts` and supplied to the presentation layer through `DependenciesProvider`.
 
 ### SOLID principles
 
-SOLID was not implemented in full. The principles currently evidenced by the code are:
+SOLID is used as design guidance rather than claimed as fully implemented or formally verified. The current assessment is:
 
-- **Single Responsibility:** screens render UI, hooks manage presentation state, use cases represent operations, mappers transform models, repositories coordinate data, and data sources perform remote access.
-- **Open/Closed, partially:** the repository, data-source, and HTTP interfaces make alternative implementations possible without changing their consumers. The current layer placement still limits this separation.
-- **Dependency Inversion:** use cases depend on the `PokemonRepository` abstraction, and the remote data source depends on `HttpClient`. Concrete objects are composed in `src/app/container/dependencies.ts`.
+- **Single Responsibility Principle — mostly applied.** Screens focus on rendering and navigation, hooks coordinate presentation state and requests, view-model functions prepare domain data for display, use cases represent application operations, mappers translate API responses, repositories coordinate data retrieval, and data sources handle API endpoints. Some modules still have more than one reason to change: hooks contain both React state orchestration and request-flow logic, while `FetchHttpClient` combines request execution, URL construction, timeout handling, response parsing, and HTTP error creation. These responsibilities are cohesive at the current size, but may need separation if their behavior grows.
+- **Open/Closed Principle — partially applied.** `PokemonRepository`, `PokemonRemoteDataSource`, `HttpClient`, and the presentation use-case contracts provide extension points. A compatible HTTP client, repository, data source, or test double can be added without changing its direct consumer. The application is not completely closed to modification: adding new capabilities still requires composition changes and may require extending the existing repository or data-source interfaces.
+- **Liskov Substitution Principle — supported by design, not yet verified.** TypeScript contracts define compatible method signatures, so `FetchHttpClient` and the real use cases can theoretically be replaced with conforming implementations. However, the project currently has no alternative production implementations or contract tests proving that replacements preserve expected behavior, error semantics, and return values. LSP should therefore not yet be considered demonstrated.
+- **Interface Segregation Principle — partially applied.** `HttpClient` exposes only the `get` operation currently required, and presentation hooks receive small, operation-specific `GetPokemonListUseCase` and `GetPokemonByIdUseCase` contracts. In contrast, both domain use cases depend on the broader `PokemonRepository` interface, and `PokemonRemoteDataSource` groups list, detail, and species operations. These interfaces are still small, but consumers know about contracts containing methods they do not use directly.
+- **Dependency Inversion Principle — largely applied.** Domain use cases depend on the `PokemonRepository` abstraction; `PokemonRepositoryImpl` depends on `PokemonRemoteDataSource`; and `PokemonRemoteDataSourceImpl` depends on `HttpClient`. Concrete objects are assembled in `src/app/container/dependencies.ts` and distributed through `DependenciesProvider`. Presentation hooks receive use-case abstractions instead of importing the global container. One remaining architectural limitation is that the use-case contracts consumed by the hooks live under `presentation`; moving those input contracts to the domain or application boundary would make their ownership and dependency direction clearer.
+
+The design creates useful seams for isolated testing, but testability should not be confused with tested behavior. Fakes and stubs can be injected without real network requests; automated unit and contract tests are still pending.
 
 Reusable UI components follow Atomic Design and are grouped into atoms and molecules under `src/presentation/components`. Components such as `Text`, `Button`, `Skeleton`, `ProgressBar`, and `CardItem` use TypeScript, Compound Components where appropriate, and individual style, type, and documentation files.
 
@@ -63,7 +67,7 @@ Reusable UI components follow Atomic Design and are grouped into atoms and molec
 
 ## Completed work
 
-1. Added Clean Architecture-inspired layers to separate business logic, data access, and presentation, with the dependency-direction limitation documented above.
+1. Added Clean Architecture-inspired layers to separate business logic, data access, and presentation. Repository abstractions remain in the domain layer, concrete implementations live in the data layer, and presentation dependencies are injected through React context.
 2. Built the home screen with a Pokémon list, Skeleton loading state, and infinite scrolling. PokéAPI results are requested and appended in pages of 20 Pokémon.
 3. Built the Pokémon details screen with general information, description, statistics, progress bars, and a Skeleton loading state.
 
