@@ -1,20 +1,35 @@
 import { useEffect, useState, type Dispatch, type SetStateAction } from 'react';
-import { dependencies } from '../../app/container/dependencies';
 import type { Pokemon } from '../../domain/entities/Pokemon';
 import type { UsePokemonByIdState } from './usePokemonById.types';
 import { toPokemonDetailsViewModel } from '../models/pokemonViewModel';
+import type { GetPokemonByIdUseCase } from './PokemonUseCase';
 
-const usePokemonById = (pokemonId: number): UsePokemonByIdState => {
+const usePokemonById = (
+  pokemonId: number,
+  getPokemonById: GetPokemonByIdUseCase,
+): UsePokemonByIdState => {
   const [pokemon, setPokemon] = useState<Pokemon | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const loadPokemon = () =>
-    loadPokemonById(pokemonId, setPokemon, setLoading, setError);
+    loadPokemonById(
+      pokemonId,
+      getPokemonById,
+      setPokemon,
+      setLoading,
+      setError,
+    );
 
   useEffect(() => {
-    loadPokemonById(pokemonId, setPokemon, setLoading, setError);
-  }, [pokemonId]);
+    loadPokemonById(
+      pokemonId,
+      getPokemonById,
+      setPokemon,
+      setLoading,
+      setError,
+    );
+  }, [pokemonId, getPokemonById]);
 
   return {
     pokemon,
@@ -26,6 +41,7 @@ const usePokemonById = (pokemonId: number): UsePokemonByIdState => {
 
 const loadPokemonById = async (
   pokemonId: number,
+  getPokemonById: GetPokemonByIdUseCase,
   setPokemon: Dispatch<SetStateAction<Pokemon | null>>,
   setLoading: Dispatch<SetStateAction<boolean>>,
   setError: Dispatch<SetStateAction<string | null>>,
@@ -34,7 +50,7 @@ const loadPokemonById = async (
     setLoading(true);
     setError(null);
 
-    const result = await dependencies.getPokemonById.execute(pokemonId);
+    const result = await getPokemonById.execute(pokemonId);
 
     setPokemon(toPokemonDetailsViewModel(result));
   } catch {

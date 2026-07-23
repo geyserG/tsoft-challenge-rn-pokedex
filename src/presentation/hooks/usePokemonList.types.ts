@@ -1,5 +1,6 @@
 import { Dispatch, SetStateAction } from 'react';
 import type { Page } from '../../domain/entities/Page';
+import { GetPokemonListUseCase } from './PokemonUseCase';
 
 export interface PokemonListItem {
   pokemonId: number;
@@ -33,4 +34,5 @@ export interface LoadPokemonListParams {
   setLoading: Dispatch<SetStateAction<boolean>>;
   setLoadingMore: Dispatch<SetStateAction<boolean>>;
   setError: Dispatch<SetStateAction<string | null>>;
+  getPokemonList: GetPokemonListUseCase;
 }
