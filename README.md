@@ -1,44 +1,44 @@
 # Pokédex
 
-Aplicación móvil desarrollada con React Native y TypeScript que consume [PokéAPI](https://pokeapi.co/).
+A mobile application built with React Native and TypeScript that consumes [PokéAPI](https://pokeapi.co/).
 
-## Funcionalidades
+## Features
 
-- Lista paginada de Pokémon con scroll infinito.
-- Pantallas de carga con skeletons.
-- Detalle, descripción y estadísticas de cada Pokémon.
-- Navegación nativa entre la lista y el detalle.
+- Paginated Pokémon list with infinite scrolling.
+- Skeleton loading states.
+- Details, description, and statistics for each Pokémon.
+- Native navigation between the list and details screens.
 
 ## Demo
 
-[Ver demo de la aplicación](./demo.mov).
+[Watch the application demo](./demo.mov).
 
-## Ejecutar el proyecto
+## Running the project
 
-Requisitos:
+Requirements:
 
-- Node.js 22.11 o superior.
+- Node.js 22.11 or later.
 - Yarn 1.22.
-- Entorno de React Native configurado para iOS o Android.
+- A React Native environment configured for iOS or Android.
 
-Instala las dependencias:
+Install the dependencies:
 
 ```sh
 yarn install
 cd ios && bundle exec pod install && cd ..
 ```
 
-Inicia la aplicación:
+Start the application:
 
 ```sh
 yarn ios
-# o
+# or
 yarn android
 ```
 
-## Arquitectura
+## Architecture
 
-El código se organiza según las cuatro capas de Clean Architecture:
+The code is organized according to the four Clean Architecture layers:
 
 ```text
 frameworks-drivers
@@ -50,53 +50,53 @@ use-cases
 entities
 ```
 
-| Carpeta                  | Responsabilidad                                                |
-| ------------------------ | -------------------------------------------------------------- |
-| `src/entities`           | Entidades y estructuras centrales del negocio.                 |
-| `src/use-cases`          | Operaciones de la aplicación y sus contratos.                  |
-| `src/interface-adapters` | Puertos, repositorios, data sources, modelos de API y mappers. |
-| `src/frameworks-drivers` | Interfaz de React Native y cliente HTTP concreto.              |
-| `src/main`               | Construcción e inyección de dependencias.                      |
+| Directory                | Responsibility                                              |
+| ------------------------ | ----------------------------------------------------------- |
+| `src/entities`           | Core business entities and data structures.                 |
+| `src/use-cases`          | Application operations and their contracts.                 |
+| `src/interface-adapters` | Ports, repositories, data sources, API models, and mappers. |
+| `src/frameworks-drivers` | React Native UI and the concrete HTTP client.               |
+| `src/main`               | Dependency construction and injection.                      |
 
-Las dependencias del código apuntan hacia las capas internas. Por ejemplo, los casos de uso dependen de `PokemonRepository`, no de su implementación concreta.
+Code dependencies point toward the inner layers. For example, use cases depend on `PokemonRepository`, not on its concrete implementation.
 
-El flujo de una petición es:
+The request flow is:
 
 ```text
-Pantalla → Hook → Caso de uso → Repositorio → Data source → HTTP → PokéAPI
+Screen → Hook → Use case → Repository → Data source → HTTP → PokéAPI
 ```
 
-La UI utiliza Atomic Design para organizar sus componentes en átomos y moléculas. Los componentes reutilizables `Button`, `Text`, `ProgressBar`, `Skeleton` y `CardItem` aplican el patrón Compound Components para exponer subcomponentes relacionados mediante una API declarativa y mantener internamente su estado y comportamiento compartido.
+The UI uses Atomic Design to organize components into atoms and molecules. The reusable `Button`, `Text`, `ProgressBar`, `Skeleton`, and `CardItem` components follow the Compound Components pattern, exposing related subcomponents through a declarative API while keeping shared state and behavior internal.
 
-## SOLID aplicado
+## SOLID principles
 
-Solo se consideran aplicados los casos visibles directamente en el código:
+Only cases directly visible in the code are considered applied:
 
-- **Responsabilidad única (SRP):** `GetPokemonList` y `GetPokemonById` representan una operación cada uno. Los mappers solo transforman modelos de API a entidades, `PokeApiDataSource` define las llamadas a PokéAPI y `PokemonRepositoryImpl` coordina la obtención y transformación de datos.
-- **Abierto/cerrado (OCP):** los consumidores reciben contratos como `PokemonRepository`, `PokemonDataSource` y `HttpClient`. Es posible agregar otra implementación y seleccionarla en `src/main/dependencies.ts` sin modificar el consumidor.
-- **Segregación de interfaces (ISP):** cada contrato de caso de uso expone únicamente su propia operación y `HttpClient` contiene solo el método `get` que necesita la aplicación.
-- **Inversión de dependencias (DIP):** los casos de uso dependen de `PokemonRepository`, el repositorio concreto depende de `PokemonDataSource` y `PokeApiDataSource` depende de `HttpClient`. Las implementaciones se conectan únicamente en `src/main/dependencies.ts`.
+- **Single Responsibility Principle (SRP):** `GetPokemonList` and `GetPokemonById` each represent one operation. Mappers only transform API models into entities, `PokeApiDataSource` defines PokéAPI requests, and `PokemonRepositoryImpl` coordinates data retrieval and transformation.
+- **Open/Closed Principle (OCP):** consumers receive contracts such as `PokemonRepository`, `PokemonDataSource`, and `HttpClient`. Another implementation can be added and selected in `src/main/dependencies.ts` without modifying its consumer.
+- **Interface Segregation Principle (ISP):** each use-case contract exposes only its own operation, and `HttpClient` contains only the `get` method required by the application.
+- **Dependency Inversion Principle (DIP):** use cases depend on `PokemonRepository`, the concrete repository depends on `PokemonDataSource`, and `PokeApiDataSource` depends on `HttpClient`. Implementations are connected only in `src/main/dependencies.ts`.
 
-No se afirma un cumplimiento completo de SOLID. En particular, Liskov no está demostrado porque actualmente solo existe una implementación por contrato y no hay pruebas de contrato que validen sustituciones. Además, cada caso de uso depende de `PokemonRepository`, que contiene operaciones de lista y detalle, por lo que la segregación de interfaces todavía puede mejorarse.
+The project does not claim complete SOLID compliance. In particular, Liskov Substitution has not been demonstrated because there is currently only one implementation per contract and no contract tests validating substitutions. In addition, each use case depends on `PokemonRepository`, which contains both list and detail operations, so interface segregation can still be improved.
 
-## Comandos
+## Commands
 
 ```sh
-yarn lint          # Analiza el código
-yarn format:check  # Verifica el formato
-yarn typecheck     # Verifica los tipos
-yarn test          # Ejecuta las pruebas
-yarn validate      # Ejecuta todas las validaciones
+yarn lint          # Analyze the code
+yarn format:check  # Check formatting
+yarn typecheck     # Check types
+yarn test          # Run tests
+yarn validate      # Run all validations
 ```
 
-Husky ejecuta `yarn lint` antes de cada commit.
+Husky runs `yarn lint` before every commit.
 
-## Pendientes
+## Pending work
 
-- Agregar almacenamiento local y funcionamiento offline.
-- Completar los estados vacíos.
-- Ampliar las pruebas unitarias, de integración y de contratos.
+- Add local storage and offline support.
+- Complete the empty states.
+- Expand unit, integration, and contract tests.
 
-## Decisión sobre las imágenes
+## Image-loading decision
 
-El endpoint de listado no incluye las ilustraciones. Para evitar una petición adicional por cada Pokémon, la aplicación construye la URL de su sprite a partir del ID. Así, cada página necesita una sola petición de listado.
+The list endpoint does not include artwork. To avoid an additional request for every Pokémon, the application builds the sprite URL from its ID. This means each page requires only one list request.
