@@ -1,40 +1,28 @@
-import { useNavigation } from '@react-navigation/native';
-import { FlatList, View, type ListRenderItem } from 'react-native';
-import { CardItem, Skeleton } from '../../components';
+import { FlatList, View } from 'react-native';
+import { Skeleton } from '../../components';
 import { INITIAL_ITEMS_TO_RENDER } from './constants';
 import ListHeader from './ListHeader/ListHeader';
 import { styles } from './PokemonList.styles';
 import { usePokemonList } from '../../hooks/usePokemonList';
 import { SkeletonContent } from './PokemonList.Skeleton';
-import { PokemonListItem } from './types';
+import { PokemonListItemType } from './types';
 import { useDependencies } from '../../contexts/DependenciesContext';
+import { useCallback } from 'react';
+import PokemonListItem from './PokemonListItem';
 
-const EMPTY_POKEMON_LIST: PokemonListItem[] = [];
+const EMPTY_POKEMON_LIST: PokemonListItemType[] = [];
 
 const PokemonList = () => {
   const { getPokemonList } = useDependencies();
   const { page, loading, loadingMore, loadMore, reload } = usePokemonList({
     getPokemonList,
   });
-  const navigation = useNavigation();
 
-  const renderItems: ListRenderItem<PokemonListItem> = ({ item }) => (
-    <View style={styles.item}>
-      <CardItem
-        onPress={() =>
-          navigation.navigate('Details', {
-            pokemonId: item.pokemonId,
-          })
-        }
-      >
-        <CardItem.Label>{item.pokemonName}</CardItem.Label>
-        <CardItem.Image
-          source={{
-            uri: item.imageLarge,
-          }}
-        />
-      </CardItem>
-    </View>
+  const renderItem = useCallback(
+    ({ item }: { item: PokemonListItemType }) => (
+      <PokemonListItem item={item} />
+    ),
+    [],
   );
 
   return (
@@ -58,7 +46,7 @@ const PokemonList = () => {
         onEndReached={loadMore}
         onEndReachedThreshold={0.5}
         refreshing={loading}
-        renderItem={renderItems}
+        renderItem={renderItem}
         updateCellsBatchingPeriod={50}
         windowSize={5}
       />

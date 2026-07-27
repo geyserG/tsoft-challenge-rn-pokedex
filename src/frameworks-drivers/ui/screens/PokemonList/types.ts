@@ -1,4 +1,4 @@
-export interface PokemonListItem {
+export interface PokemonListItemType {
   pokemonId: number;
   pokemonName: string;
   imageLarge: string;
