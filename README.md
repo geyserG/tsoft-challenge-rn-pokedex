@@ -114,11 +114,7 @@ en el código:
   `PokemonRepository`, el repositorio concreto depende de `PokemonDataSource`
   y la fuente de datos concreta depende de `HttpClient`.
 
-El proyecto no afirma cumplir SOLID por completo. La sustitución de Liskov no
-se ha demostrado porque actualmente existe una sola implementación por
-contrato y no hay pruebas de contrato que validen posibles sustituciones.
-Además, `PokemonRepository` reúne las operaciones de lista y detalle, por lo
-que la segregación de interfaces todavía puede mejorar.
+El proyecto no afirma cumplir SOLID por completo. `PokemonRepository` reúne las operaciones de lista y detalle, por lo que la segregación de interfaces todavía puede mejorar.
 
 ## Comandos
 
