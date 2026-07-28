@@ -1,10 +1,10 @@
 import type { Page } from '../../domain/entities/Page';
 import type { Pokemon } from '../../domain/entities/Pokemon';
-import { PokemonByIdRepository } from '../../domain/repositories/PokemonByIdRepository';
 import type { PokemonListRepository } from '../../domain/repositories/PokemonListRepository';
 import type { PokemonDataSource } from '../datasources/PokemonDataSource';
 import { PageMapper } from '../mappers/PageMapper';
 import { PokemonMapper } from '../mappers/PokemonMapper';
+import { PokemonByIdRepository } from '../../domain/repositories/PokemonByIdRepository';
 
 export class PokemonRepositoryImpl
   implements PokemonListRepository, PokemonByIdRepository
