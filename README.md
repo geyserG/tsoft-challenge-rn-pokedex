@@ -1,102 +1,144 @@
 # Pokédex
 
-A mobile application built with React Native and TypeScript that consumes [PokéAPI](https://pokeapi.co/).
+Aplicación móvil desarrollada con React Native y TypeScript que consume
+[PokéAPI](https://pokeapi.co/).
 
-## Features
+## Funcionalidades
 
-- Paginated Pokémon list with infinite scrolling.
-- Skeleton loading states.
-- Details, description, and statistics for each Pokémon.
-- Native navigation between the list and details screens.
+- Lista paginada de Pokémon con desplazamiento infinito.
+- Estados de carga mediante esqueletos.
+- Detalles, descripción y estadísticas de cada Pokémon.
+- Navegación nativa entre las pantallas de lista y detalle.
 
-## Demo
+## Demostración
 
-[Watch the application demo](./demo.mov).
+[Ver la demostración de la aplicación](./demo.mov).
 
-## Running the project
+## Ejecutar el proyecto
 
-Requirements:
+Requisitos:
 
-- Node.js 22.11 or later.
+- Node.js 22.13 o posterior.
 - Yarn 1.22.
-- A React Native environment configured for iOS or Android.
+- Un entorno de React Native configurado para iOS o Android.
 
-Install the dependencies:
+Instala las dependencias:
 
 ```sh
 yarn install
 cd ios && bundle exec pod install && cd ..
 ```
 
-Start the application:
+Inicia la aplicación:
 
 ```sh
 yarn ios
-# or
+# o
 yarn android
 ```
 
-## Architecture
+## Arquitectura
 
-The code is organized according to the four Clean Architecture layers:
-
-```text
-frameworks-drivers
-        ↓
-interface-adapters
-        ↓
-use-cases
-        ↓
-entities
-```
-
-| Directory                | Responsibility                                              |
-| ------------------------ | ----------------------------------------------------------- |
-| `src/entities`           | Core business entities and data structures.                 |
-| `src/use-cases`          | Application operations and their contracts.                 |
-| `src/interface-adapters` | Ports, repositories, data sources, API models, and mappers. |
-| `src/frameworks-drivers` | React Native UI and the concrete HTTP client.               |
-| `src/main`               | Dependency construction and injection.                      |
-
-Code dependencies point toward the inner layers. For example, use cases depend on `PokemonRepository`, not on its concrete implementation.
-
-The request flow is:
+El código combina una organización por funcionalidad con los principios de
+Clean Architecture. La funcionalidad de Pokémon contiene sus propias capas:
 
 ```text
-Screen → Hook → Use case → Repository → Data source → HTTP → PokéAPI
+src/
+├── app/
+│   ├── navigation/       # Navegación principal
+│   └── providers/        # Inyección de dependencias mediante React Context
+├── features/
+│   └── pokemon/
+│       ├── domain/       # Entidades, contratos y casos de uso
+│       ├── infrastructure/ # Acceso a datos, DTO, mappers y repositorios
+│       ├── presentation/ # Hooks y pantallas
+│       └── di/           # Construcción de las dependencias de la funcionalidad
+└── shared/
+    ├── components/       # Componentes reutilizables
+    └── http/             # Contrato y cliente HTTP compartidos
 ```
 
-The UI uses Atomic Design to organize components into atoms and molecules. The reusable `Button`, `Text`, `ProgressBar`, `Skeleton`, and `CardItem` components follow the Compound Components pattern, exposing related subcomponents through a declarative API while keeping shared state and behavior internal.
+| Directorio                                         | Responsabilidad                                         |
+| -------------------------------------------------- | ------------------------------------------------------- |
+| `src/features/pokemon/domain/entities`             | Modelos de negocio utilizados por la aplicación.        |
+| `src/features/pokemon/domain/repositories`         | Contratos para acceder a la información de Pokémon.     |
+| `src/features/pokemon/domain/use-cases`            | Operaciones disponibles para obtener listas y detalles. |
+| `src/features/pokemon/infrastructure/datasources`  | Peticiones concretas a PokéAPI.                         |
+| `src/features/pokemon/infrastructure/dtos`         | Estructuras que representan las respuestas de la API.   |
+| `src/features/pokemon/infrastructure/mappers`      | Conversión de los DTO a entidades del dominio.          |
+| `src/features/pokemon/infrastructure/repositories` | Implementación de los repositorios del dominio.         |
+| `src/features/pokemon/presentation`                | Hooks y pantallas de React Native.                      |
+| `src/features/pokemon/di`                          | Creación y conexión de las dependencias de Pokémon.     |
+| `src/app`                                          | Navegación y proveedores generales de la aplicación.    |
+| `src/shared`                                       | Componentes e infraestructura reutilizables.            |
 
-## SOLID principles
+Las dependencias apuntan hacia el dominio. Por ejemplo, los casos de uso
+conocen el contrato `PokemonRepository`, pero no su implementación concreta.
+La infraestructura implementa ese contrato y convierte las respuestas
+externas en entidades antes de entregarlas al dominio.
 
-Only cases directly visible in the code are considered applied:
+El flujo principal de una solicitud es:
 
-- **Single Responsibility Principle (SRP):** `GetPokemonList` and `GetPokemonById` each represent one operation. Mappers only transform API models into entities, `PokeApiDataSource` defines PokéAPI requests, and `PokemonRepositoryImpl` coordinates data retrieval and transformation.
-- **Open/Closed Principle (OCP):** consumers receive contracts such as `PokemonRepository`, `PokemonDataSource`, and `HttpClient`. Another implementation can be added and selected in `src/main/dependencies.ts` without modifying its consumer.
-- **Interface Segregation Principle (ISP):** each use-case contract exposes only its own operation, and `HttpClient` contains only the `get` method required by the application.
-- **Dependency Inversion Principle (DIP):** use cases depend on `PokemonRepository`, the concrete repository depends on `PokemonDataSource`, and `PokeApiDataSource` depends on `HttpClient`. Implementations are connected only in `src/main/dependencies.ts`.
+```text
+Pantalla → Hook → Caso de uso → Repositorio → Fuente de datos → Cliente HTTP → PokéAPI
+```
 
-The project does not claim complete SOLID compliance. In particular, Liskov Substitution has not been demonstrated because there is currently only one implementation per contract and no contract tests validating substitutions. In addition, each use case depends on `PokemonRepository`, which contains both list and detail operations, so interface segregation can still be improved.
+Las implementaciones concretas se conectan en
+`src/features/pokemon/di/pokemonContainer.ts`. Después se proporcionan a la
+interfaz mediante `DependenciesProvider`, evitando que las pantallas creen o
+conozcan directamente los servicios de infraestructura.
 
-## Commands
+La interfaz utiliza Atomic Design para organizar los componentes compartidos
+en átomos y moléculas. `Button`, `Text`, `ProgressBar`, `Skeleton` y `CardItem`
+siguen el patrón Compound Components: exponen subcomponentes relacionados
+mediante una API declarativa y mantienen internamente el estado o
+comportamiento compartido.
+
+## Principios SOLID
+
+Solo se consideran aplicados los principios que pueden observarse directamente
+en el código:
+
+- **Responsabilidad única (SRP):** `GetPokemonList` y `GetPokemonById`
+  representan una sola operación cada uno. Los mappers convierten datos,
+  `PokemonDataSourceImpl` realiza las peticiones a PokéAPI y
+  `PokemonRepositoryImpl` coordina la obtención y transformación de los datos.
+- **Abierto/cerrado (OCP):** los consumidores dependen de contratos como
+  `PokemonRepository`, `PokemonDataSource` y `HttpClient`. Es posible añadir
+  otras implementaciones y seleccionarlas en `pokemonContainer.ts` sin
+  modificar los casos de uso.
+- **Segregación de interfaces (ISP):** cada contrato de caso de uso expone
+  únicamente su propia operación y `HttpClient` contiene solo el método `get`
+  que necesita la aplicación.
+- **Inversión de dependencias (DIP):** los casos de uso dependen de
+  `PokemonRepository`, el repositorio concreto depende de `PokemonDataSource`
+  y la fuente de datos concreta depende de `HttpClient`.
+
+El proyecto no afirma cumplir SOLID por completo. `PokemonRepository` reúne las operaciones de lista y detalle, por lo que la segregación de interfaces todavía puede mejorar.
+
+## Comandos
 
 ```sh
-yarn lint          # Analyze the code
-yarn format:check  # Check formatting
-yarn typecheck     # Check types
-yarn test          # Run tests
-yarn validate      # Run all validations
+yarn lint          # Analiza el código
+yarn lint:fix      # Corrige automáticamente los problemas compatibles
+yarn format        # Aplica el formato
+yarn format:check  # Comprueba el formato
+yarn typecheck     # Comprueba los tipos
+yarn test          # Ejecuta las pruebas
+yarn validate      # Ejecuta todas las validaciones
 ```
 
-Husky runs `yarn lint` before every commit.
+Husky ejecuta `yarn lint` antes de cada commit.
 
-## Pending work
+## Trabajo pendiente
 
-- Add local storage and offline support.
-- Complete the empty states.
-- Expand unit, integration, and contract tests.
+- Añadir almacenamiento local y funcionamiento sin conexión.
+- Completar los estados vacíos.
+- Ampliar las pruebas unitarias, de integración y de contrato.
 
-## Image-loading decision
+## Decisión sobre la carga de imágenes
 
-The list endpoint does not include artwork. To avoid an additional request for every Pokémon, the application builds the sprite URL from its ID. This means each page requires only one list request.
+El endpoint de la lista no incluye las ilustraciones. Para evitar una petición
+adicional por cada Pokémon, la aplicación construye la URL del sprite a partir
+de su identificador. De esta forma, cada página necesita una sola petición para
+obtener la lista.
