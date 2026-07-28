@@ -1,5 +1,5 @@
 import { ScrollView, View } from 'react-native';
-import { Skeleton } from '../../../../shared/components';
+import { Skeleton } from '../../../../../shared/components';
 import { styles } from './styles';
 
 const STAT_SKELETON_ITEMS = 6;

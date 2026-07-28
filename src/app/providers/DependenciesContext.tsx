@@ -1,6 +1,6 @@
 import { createContext, useContext, type PropsWithChildren } from 'react';
-import type { GetPokemonByIdUseCase } from '../../pokemon/domain/use-cases/GetPokemonByIdUseCase';
-import type { GetPokemonListUseCase } from '../../pokemon/domain/use-cases/GetPokemonListUseCase';
+import type { GetPokemonByIdUseCase } from '../../features/pokemon/domain/use-cases/GetPokemonByIdUseCase';
+import type { GetPokemonListUseCase } from '../../features/pokemon/domain/use-cases/GetPokemonListUseCase';
 
 export interface AppDependencies {
   getPokemonList: GetPokemonListUseCase;

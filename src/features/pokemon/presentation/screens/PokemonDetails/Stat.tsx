@@ -2,7 +2,7 @@ import { View, Text } from 'react-native';
 import React from 'react';
 import { styles } from './styles';
 import { pokemonStatLabels } from '../constants';
-import { ProgressBar } from '../../../../shared/components';
+import { ProgressBar } from '../../../../../shared/components';
 
 type StatType = {
   name: string;

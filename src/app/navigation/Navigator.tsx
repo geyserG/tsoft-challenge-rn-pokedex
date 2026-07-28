@@ -1,10 +1,10 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createStaticNavigation } from '@react-navigation/native';
-import PokemonList from '../../pokemon/presentation/screens/PokemonList/PokemonList';
-import PokemonDetails from '../../pokemon/presentation/screens/PokemonDetails/PokemonDetails';
-import PokemonListEmptyState from '../../pokemon/presentation/screens/PokemonListEmptyState';
-import PokemonDetailsEmptyState from '../../pokemon/presentation/screens/PokemonDetailsEmptyState';
-import { primaryColorPokedex } from '../../pokemon/presentation/screens/constants';
+import PokemonList from '../../features/pokemon/presentation/screens/PokemonList/PokemonList';
+import PokemonDetails from '../../features/pokemon/presentation/screens/PokemonDetails/PokemonDetails';
+import PokemonListEmptyState from '../../features/pokemon/presentation/screens/PokemonListEmptyState';
+import PokemonDetailsEmptyState from '../../features/pokemon/presentation/screens/PokemonDetailsEmptyState';
+import { primaryColorPokedex } from '../../features/pokemon/presentation/screens/constants';
 
 export const RootStack = createNativeStackNavigator({
   initialRouteName: 'Home',

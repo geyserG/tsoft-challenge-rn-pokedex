@@ -1,13 +1,13 @@
 import { View, ScrollView, Image } from 'react-native';
 import React from 'react';
 import type { StaticScreenProps } from '@react-navigation/native';
-import type { PokemonDetailsParams } from '../../../../app/navigation/types';
+import type { PokemonDetailsParams } from '../../../../../app/navigation/types';
 import { usePokemonById } from '../../hooks/usePokemonById';
-import { Text } from '../../../../shared/components';
+import { Text } from '../../../../../shared/components';
 import { styles } from './styles';
 import PokemonDetailsSkeleton from './PokemonDetails.Skeleton';
 import Stat from './Stat';
-import { useDependencies } from '../../../../app/providers/DependenciesContext';
+import { useDependencies } from '../../../../../app/providers/DependenciesContext';
 import { capitalizeFirstLetter } from '../../utils';
 
 type Props = StaticScreenProps<PokemonDetailsParams>;

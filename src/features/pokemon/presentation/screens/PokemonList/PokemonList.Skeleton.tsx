@@ -1,4 +1,4 @@
-import { Skeleton } from '../../../../shared/components';
+import { Skeleton } from '../../../../../shared/components';
 import { styles } from './PokemonList.styles';
 
 export const SkeletonContent = () => (

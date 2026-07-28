@@ -1,6 +1,6 @@
 import { GetPokemonList } from '../domain/use-cases/GetPokemonList';
 import { GetPokemonById } from '../domain/use-cases/GetPokemonById';
-import { FetchHttpClient } from '../../shared/http/FetchHttpClient';
+import { FetchHttpClient } from '../../../shared/http/FetchHttpClient';
 import { PokemonDataSourceImpl } from '../infrastructure/datasources/PokemonDataSourceImpl';
 import { PokemonRepositoryImpl } from '../infrastructure/repositories/PokemonRepositoryImpl';
 
