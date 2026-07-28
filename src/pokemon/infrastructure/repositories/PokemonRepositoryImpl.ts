@@ -1,0 +1,25 @@
+import type { Page } from '../../domain/entities/Page';
+import type { Pokemon } from '../../domain/entities/Pokemon';
+import type { PokemonRepository } from '../../domain/repositories/PokemonRepository';
+import type { PokemonDataSource } from '../datasources/PokemonDataSource';
+import { PageMapper } from '../mappers/PageMapper';
+import { PokemonMapper } from '../mappers/PokemonMapper';
+
+export class PokemonRepositoryImpl implements PokemonRepository {
+  constructor(private readonly pokemonDataSource: PokemonDataSource) {}
+
+  async fetchPokemonList(offset: number, limit: number): Promise<Page> {
+    const pageDto = await this.pokemonDataSource.getPokemonList(offset, limit);
+
+    return PageMapper.parseToDomain(pageDto);
+  }
+
+  async fetchPokemonById(pokemonId: number): Promise<Pokemon> {
+    const [pokemonDto, pokemonSpeciesDto] = await Promise.all([
+      this.pokemonDataSource.getPokemonById(pokemonId),
+      this.pokemonDataSource.getPokemonSpeciesById(pokemonId),
+    ]);
+
+    return PokemonMapper.parseToDomain(pokemonDto, pokemonSpeciesDto);
+  }
+}
