@@ -1,12 +1,12 @@
 import { FlatList, View } from 'react-native';
-import { Skeleton } from '../../components';
+import { Skeleton } from '../../../../shared/components';
 import { INITIAL_ITEMS_TO_RENDER } from './constants';
 import ListHeader from './ListHeader/ListHeader';
 import { styles } from './PokemonList.styles';
 import { usePokemonList } from '../../hooks/usePokemonList';
 import { SkeletonContent } from './PokemonList.Skeleton';
 import { PokemonListItemType } from './types';
-import { useDependencies } from '../../contexts/DependenciesContext';
+import { useDependencies } from '../../../../app/providers/DependenciesContext';
 import { useCallback } from 'react';
 import PokemonListItem from './PokemonListItem';
 

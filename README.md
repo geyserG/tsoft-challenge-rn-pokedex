@@ -72,10 +72,10 @@ The UI uses Atomic Design to organize components into atoms and molecules. The r
 
 Only cases directly visible in the code are considered applied:
 
-- **Single Responsibility Principle (SRP):** `GetPokemonList` and `GetPokemonById` each represent one operation. Mappers only transform API models into entities, `PokeApiDataSource` defines PokéAPI requests, and `PokemonRepositoryImpl` coordinates data retrieval and transformation.
+- **Single Responsibility Principle (SRP):** `GetPokemonList` and `GetPokemonById` each represent one operation. Mappers only transform API models into entities, `PokemonDataSourceImpl` defines PokéAPI requests, and `PokemonRepositoryImpl` coordinates data retrieval and transformation.
 - **Open/Closed Principle (OCP):** consumers receive contracts such as `PokemonRepository`, `PokemonDataSource`, and `HttpClient`. Another implementation can be added and selected in `src/main/dependencies.ts` without modifying its consumer.
 - **Interface Segregation Principle (ISP):** each use-case contract exposes only its own operation, and `HttpClient` contains only the `get` method required by the application.
-- **Dependency Inversion Principle (DIP):** use cases depend on `PokemonRepository`, the concrete repository depends on `PokemonDataSource`, and `PokeApiDataSource` depends on `HttpClient`. Implementations are connected only in `src/main/dependencies.ts`.
+- **Dependency Inversion Principle (DIP):** use cases depend on `PokemonRepository`, the concrete repository depends on `PokemonDataSource`, and `PokemonDataSourceImpl` depends on `HttpClient`. Implementations are connected only in `src/main/dependencies.ts`.
 
 The project does not claim complete SOLID compliance. In particular, Liskov Substitution has not been demonstrated because there is currently only one implementation per contract and no contract tests validating substitutions. In addition, each use case depends on `PokemonRepository`, which contains both list and detail operations, so interface segregation can still be improved.
 

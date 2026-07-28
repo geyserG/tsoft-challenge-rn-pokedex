@@ -4,7 +4,7 @@ import type { PageDto } from '../dtos/PageDto';
 import type { PokemonDto } from '../dtos/PokemonDto';
 import type { PokemonSpeciesDto } from '../dtos/PokemonSpeciesDto';
 
-export class PokeApiDataSource implements PokemonDataSource {
+export class PokemonDataSourceImpl implements PokemonDataSource {
   constructor(private readonly httpClient: HttpClient) {}
 
   async getPokemonList(offset: number, limit: number): Promise<PageDto> {

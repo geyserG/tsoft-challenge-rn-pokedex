@@ -1,7 +1,6 @@
 import { useEffect, useState, type Dispatch, type SetStateAction } from 'react';
 import type { Pokemon } from '../../domain/entities/Pokemon';
 import type { UsePokemonByIdState } from './usePokemonById.types';
-import { toPokemonDetailsViewModel } from '../models/pokemonViewModel';
 import type { GetPokemonByIdUseCase } from '../../domain/use-cases/GetPokemonByIdUseCase';
 
 const usePokemonById = (
@@ -52,7 +51,7 @@ const loadPokemonById = async (
 
     const result = await getPokemonById.execute(pokemonId);
 
-    setPokemon(toPokemonDetailsViewModel(result));
+    setPokemon(result);
   } catch {
     setError('No fue posible cargar el pokémon');
   } finally {

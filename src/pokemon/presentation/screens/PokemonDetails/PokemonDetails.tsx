@@ -1,13 +1,14 @@
 import { View, ScrollView, Image } from 'react-native';
 import React from 'react';
 import type { StaticScreenProps } from '@react-navigation/native';
-import type { PokemonDetailsParams } from '../../navigation/types';
+import type { PokemonDetailsParams } from '../../../../app/navigation/types';
 import { usePokemonById } from '../../hooks/usePokemonById';
-import { Text } from '../../components';
+import { Text } from '../../../../shared/components';
 import { styles } from './styles';
 import PokemonDetailsSkeleton from './PokemonDetails.Skeleton';
 import Stat from './Stat';
-import { useDependencies } from '../../contexts/DependenciesContext';
+import { useDependencies } from '../../../../app/providers/DependenciesContext';
+import { capitalizeFirstLetter } from '../../utils';
 
 type Props = StaticScreenProps<PokemonDetailsParams>;
 
@@ -26,7 +27,9 @@ const PokemonDetails = ({ route }: Props) => {
         <View style={styles.metaData}>
           <View>
             <Text.Emphasis color="white">Tipo</Text.Emphasis>
-            <Text color="white">{pokemon?.type}</Text>
+            <Text color="white">
+              {capitalizeFirstLetter(pokemon?.type as string)}
+            </Text>
           </View>
           <View>
             <Text.Emphasis color="white">Altura</Text.Emphasis>
@@ -46,7 +49,7 @@ const PokemonDetails = ({ route }: Props) => {
       </View>
       <View>
         <Text variant="titlepage" style={styles.title}>
-          {pokemon?.pokemonName}
+          {capitalizeFirstLetter(pokemon?.pokemonName as string)}
         </Text>
 
         <View style={styles.othersMetaData}>
