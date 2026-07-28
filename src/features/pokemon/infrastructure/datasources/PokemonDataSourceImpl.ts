@@ -1,4 +1,4 @@
-import type { HttpClient } from '../../../shared/http/HttpClient';
+import type { HttpClient } from '../../../../shared/http/HttpClient';
 import type { PokemonDataSource } from './PokemonDataSource';
 import type { PageDto } from '../dtos/PageDto';
 import type { PokemonDto } from '../dtos/PokemonDto';
