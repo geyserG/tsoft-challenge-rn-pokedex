@@ -3,7 +3,7 @@ import React from 'react';
 import type { StaticScreenProps } from '@react-navigation/native';
 import type { PokemonDetailsParams } from '../../../../../app/navigation/types';
 import { usePokemonById } from '../../hooks/usePokemonById';
-import { Text } from '../../../../../shared/components';
+import { Button, Text } from '../../../../../shared/components';
 import { styles } from './styles';
 import PokemonDetailsSkeleton from './PokemonDetails.Skeleton';
 import Stat from './Stat';
@@ -13,13 +13,21 @@ import { capitalizeFirstLetter } from '../../utils';
 type Props = StaticScreenProps<PokemonDetailsParams>;
 
 const PokemonDetails = ({ route }: Props) => {
-  const { getPokemonById } = useDependencies();
+  const { getPokemonById, setPokemonLikeListItem } = useDependencies();
   const { pokemonId } = route.params;
   const { pokemon, loading } = usePokemonById(pokemonId, getPokemonById);
 
   if (loading) {
     return <PokemonDetailsSkeleton />;
   }
+
+  const handleSaveFavorite = () => {
+    setPokemonLikeListItem.execute({
+      pokemonId: pokemon?.pokemonId as number,
+      pokemonName: pokemon?.pokemonName as string,
+      imageLarge: pokemon?.imageLarge as string,
+    });
+  };
 
   return (
     <ScrollView>
@@ -51,6 +59,10 @@ const PokemonDetails = ({ route }: Props) => {
         <Text variant="titlepage" style={styles.title}>
           {capitalizeFirstLetter(pokemon?.pokemonName as string)}
         </Text>
+
+        <Button onPress={handleSaveFavorite}>
+          <Button.Label>Guardar como favorito</Button.Label>
+        </Button>
 
         <View style={styles.othersMetaData}>
           <View>

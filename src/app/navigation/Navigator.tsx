@@ -5,6 +5,8 @@ import PokemonDetails from '../../features/pokemon/presentation/screens/PokemonD
 import PokemonListEmptyState from '../../features/pokemon/presentation/screens/PokemonListEmptyState';
 import PokemonDetailsEmptyState from '../../features/pokemon/presentation/screens/PokemonDetailsEmptyState';
 import { primaryColorPokedex } from '../../features/pokemon/presentation/screens/constants';
+import FavoriteList from '../../features/pokemon/presentation/screens/FavoriteList/FavoriteList';
+import FavoriteButton from './FavoriteButton';
 
 export const RootStack = createNativeStackNavigator({
   initialRouteName: 'Home',
@@ -12,7 +14,8 @@ export const RootStack = createNativeStackNavigator({
     Home: {
       screen: PokemonList,
       options: {
-        headerShown: false,
+        title: 'Inicio',
+        headerRight: FavoriteButton,
       },
     },
     Details: {
@@ -27,6 +30,7 @@ export const RootStack = createNativeStackNavigator({
     },
     ListEmptyState: PokemonListEmptyState,
     DetailsEmptyState: PokemonDetailsEmptyState,
+    FavoriteList: FavoriteList,
   },
   screenOptions: {
     contentStyle: {

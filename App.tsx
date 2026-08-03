@@ -2,9 +2,11 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Navigation from './src/app/navigation/Navigator';
 import { DependenciesProvider } from './src/app/providers/DependenciesContext';
 import { pokemonContainer } from './src/features/pokemon/di/pokemonContainer';
+import { pokemonLikeListContainer } from './src/features/pokemon/di/pokemonLikeListContainer';
 
 const dependencies = {
   ...pokemonContainer,
+  ...pokemonLikeListContainer,
 };
 
 function App() {

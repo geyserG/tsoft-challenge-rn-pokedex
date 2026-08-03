@@ -7,13 +7,13 @@ import { usePokemonList } from '../../hooks/usePokemonList';
 import { SkeletonContent } from './PokemonList.Skeleton';
 import { PokemonListItemType } from './types';
 import { useDependencies } from '../../../../../app/providers/DependenciesContext';
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import PokemonListItem from './PokemonListItem';
 
 const EMPTY_POKEMON_LIST: PokemonListItemType[] = [];
 
 const PokemonList = () => {
-  const { getPokemonList } = useDependencies();
+  const { getPokemonList, getPokemonLikeList } = useDependencies();
   const { page, loading, loadingMore, loadMore, reload } = usePokemonList({
     getPokemonList,
   });
@@ -24,6 +24,16 @@ const PokemonList = () => {
     ),
     [],
   );
+
+  useEffect(() => {
+    try {
+      getPokemonLikeList.execute().then(favorites => {
+        console.log(favorites);
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
 
   return (
     <View style={styles.container}>
