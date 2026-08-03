@@ -30,7 +30,12 @@ export const RootStack = createNativeStackNavigator({
     },
     ListEmptyState: PokemonListEmptyState,
     DetailsEmptyState: PokemonDetailsEmptyState,
-    FavoriteList: FavoriteList,
+    FavoriteList: {
+      screen: FavoriteList,
+      options: {
+        title: 'Favoritos',
+      },
+    },
   },
   screenOptions: {
     contentStyle: {

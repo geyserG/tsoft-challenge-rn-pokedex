@@ -1,14 +1,14 @@
 import { createContext, useContext, type PropsWithChildren } from 'react';
 import type { GetPokemonByIdUseCase } from '../../features/pokemon/domain/use-cases/GetPokemonByIdUseCase';
 import type { GetPokemonListUseCase } from '../../features/pokemon/domain/use-cases/GetPokemonListUseCase';
-import { GetPokemonLikeListUseCase } from '../../features/pokemon/domain/use-cases/GetPokemonLikeListUseCase';
-import { SetPokemonLikeListItem } from '../../features/pokemon/domain/use-cases/SetPokemonLikeListItem';
+import { GetPokemonFavoriteListUseCase } from '../../features/pokemon/domain/use-cases/GetPokemonFavoriteListUseCase';
+import { SetPokemonFavoriteListItem } from '../../features/pokemon/domain/use-cases/setPokemonFavoriteListItem';
 
 export interface AppDependencies {
   getPokemonList: GetPokemonListUseCase;
   getPokemonById: GetPokemonByIdUseCase;
-  getPokemonLikeList: GetPokemonLikeListUseCase;
-  setPokemonLikeListItem: SetPokemonLikeListItem;
+  getPokemonFavoriteList: GetPokemonFavoriteListUseCase;
+  setPokemonFavoriteListItem: SetPokemonFavoriteListItem;
 }
 
 const DependenciesContext = createContext<AppDependencies | null>(null);
