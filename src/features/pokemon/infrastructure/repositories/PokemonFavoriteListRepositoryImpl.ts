@@ -1,10 +1,13 @@
 import { PokemonFavoriteList } from '../../domain/entities/PokemonFavoriteList';
 import { PokemonFavoriteListItem } from '../../domain/entities/PokemonFavoriteListItem';
-import { PokemonFavoriteListRepository } from '../../domain/repositories/PokemonFavoriteListRepository';
+import {
+  PokemonFavoriteListReader,
+  PokemonFavoriteListWriter,
+} from '../../domain/repositories/PokemonFavoriteListRepository';
 import { PokemonFavoriteListDataSource } from '../datasources/PokemonFavoriteListDataSource';
 
 export class PokemonFavoriteListRepositoryImpl
-  implements PokemonFavoriteListRepository
+  implements PokemonFavoriteListReader, PokemonFavoriteListWriter
 {
   constructor(
     private readonly pokemonFavoriteListDataSource: PokemonFavoriteListDataSource,
@@ -14,11 +17,9 @@ export class PokemonFavoriteListRepositoryImpl
     return this.pokemonFavoriteListDataSource.getPokemonFavoriteList();
   }
 
-  async setPokemonFavoriteListItem(
+  async addPokemonToFavoriteList(
     pokemon: PokemonFavoriteListItem,
   ): Promise<void> {
-    return this.pokemonFavoriteListDataSource.setPokemonFavoriteListItem(
-      pokemon,
-    );
+    return this.pokemonFavoriteListDataSource.addPokemonToFavoriteList(pokemon);
   }
 }

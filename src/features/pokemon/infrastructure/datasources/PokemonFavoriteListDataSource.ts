@@ -3,5 +3,5 @@ import { PokemonFavoriteListItem } from '../../domain/entities/PokemonFavoriteLi
 
 export interface PokemonFavoriteListDataSource {
   getPokemonFavoriteList(): Promise<PokemonFavoriteList>;
-  setPokemonFavoriteListItem(pokemon: PokemonFavoriteListItem): Promise<void>;
+  addPokemonToFavoriteList(pokemon: PokemonFavoriteListItem): Promise<void>;
 }

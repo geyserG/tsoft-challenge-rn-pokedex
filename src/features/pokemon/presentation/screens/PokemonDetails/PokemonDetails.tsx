@@ -13,7 +13,7 @@ import { capitalizeFirstLetter } from '../../utils';
 type Props = StaticScreenProps<PokemonDetailsParams>;
 
 const PokemonDetails = ({ route }: Props) => {
-  const { getPokemonById, setPokemonFavoriteListItem } = useDependencies();
+  const { getPokemonById, addPokemonToFavoriteList } = useDependencies();
   const { pokemonId } = route.params;
   const { pokemon, loading } = usePokemonById(pokemonId, getPokemonById);
 
@@ -22,7 +22,7 @@ const PokemonDetails = ({ route }: Props) => {
   }
 
   const handleSaveFavorite = () => {
-    setPokemonFavoriteListItem.execute({
+    addPokemonToFavoriteList.execute({
       pokemonId: pokemon?.pokemonId as number,
       pokemonName: pokemon?.pokemonName as string,
       imageLarge: pokemon?.imageLarge as string,

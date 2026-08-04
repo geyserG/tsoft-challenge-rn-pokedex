@@ -1,7 +1,10 @@
 import { PokemonFavoriteList } from '../entities/PokemonFavoriteList';
 import { PokemonFavoriteListItem } from '../entities/PokemonFavoriteListItem';
 
-export interface PokemonFavoriteListRepository {
+export interface PokemonFavoriteListReader {
   getPokemonFavoriteList(): Promise<PokemonFavoriteList>;
-  setPokemonFavoriteListItem(pokemon: PokemonFavoriteListItem): Promise<void>;
+}
+
+export interface PokemonFavoriteListWriter {
+  addPokemonToFavoriteList(pokemon: PokemonFavoriteListItem): Promise<void>;
 }

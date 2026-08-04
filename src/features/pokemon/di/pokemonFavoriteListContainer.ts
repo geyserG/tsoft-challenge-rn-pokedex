@@ -2,7 +2,7 @@ import { LocalStorageImpl } from '../../../shared/storage/LocalStorageImpl';
 import { GetPokemonFavoriteList } from '../domain/use-cases/GetPokemonFavoriteList';
 import { PokemonFavoriteListDataSourceImpl } from '../infrastructure/datasources/PokemonFavoriteListDataSourceImpl';
 import { PokemonFavoriteListRepositoryImpl } from '../infrastructure/repositories/PokemonFavoriteListRepositoryImpl';
-import { SetPokemonFavoriteListItem } from '../domain/use-cases/SetPokemonFavoriteListItem';
+import { AddPokemonToFavoriteList } from '../domain/use-cases/AddPokemonToFavoriteList';
 
 const localStorage = new LocalStorageImpl();
 
@@ -18,11 +18,11 @@ const getPokemonFavoriteList = new GetPokemonFavoriteList(
   pokemonFavoriteListRepositoryImpl,
 );
 
-const setPokemonFavoriteListItem = new SetPokemonFavoriteListItem(
+const addPokemonToFavoriteList = new AddPokemonToFavoriteList(
   pokemonFavoriteListRepositoryImpl,
 );
 
 export const pokemonFavoriteListContainer = {
   getPokemonFavoriteList,
-  setPokemonFavoriteListItem,
+  addPokemonToFavoriteList,
 };

@@ -14,7 +14,7 @@ export class PokemonFavoriteListDataSourceImpl
     return PokemonFavoriteListMapper.toDomain(resultDto ?? '');
   }
 
-  async setPokemonFavoriteListItem(
+  async addPokemonToFavoriteList(
     pokemon: PokemonFavoriteListItem,
   ): Promise<void> {
     const result = (await this.localStorage.getItem('favoritos')) ?? '';
