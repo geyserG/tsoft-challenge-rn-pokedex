@@ -20,6 +20,6 @@ export class PokemonFavoriteListDataSourceImpl
     const result = (await this.localStorage.getItem('favoritos')) ?? '';
     const resultDto = PokemonFavoriteListMapper.toDomain(result);
     resultDto.list.push(pokemon);
-    this.localStorage.setItem('favoritos', JSON.stringify(resultDto));
+    await this.localStorage.setItem('favoritos', JSON.stringify(resultDto));
   }
 }
